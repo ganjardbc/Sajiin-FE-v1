@@ -36,6 +36,8 @@ import storeCashierTable from './modules/cashier/table'
 import storeCashierPayment from './modules/cashier/payment'
 import storeBizpars from './modules/bizpars'
 import storePermissions from './modules/permissions'
+import storeRoles from './modules/roles'
+import storeRolePermissions from './modules/rolePermissions'
 
 Vue.use(Vuex)
 
@@ -63,6 +65,8 @@ export default new Vuex.Store({
     storeCashierPayment,
     storeBizpars,
     storePermissions,
+    storeRoles,
+    storeRolePermissions,
 
     // old store
     auth,

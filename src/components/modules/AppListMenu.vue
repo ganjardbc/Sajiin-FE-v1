@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <ul v-if="dt.menu.length > 0" class="subcontent">
-                        <li v-for="(sb, index) in dt.menu" :key="index" class="ml-list">
+                        <li v-for="(sb, index) in dt.menu" :key="index" class="ml-list" @click="onClick">
                             <router-link :to="{name: sb.link}" class="ml-link" :title="sb.label">
                                 <div class="ml-icon">
                                     <i :class="sb.icon" />
@@ -63,6 +63,9 @@ export default {
         this.permissions = this.$session.get('permissions')
     },
     methods: {
+        onClick () {
+            this.$emit('onClick')
+        },
         onCheckSubmenus (data) {
             let menu = []
             data && data.map((dt) => {
@@ -110,10 +113,6 @@ export default {
         }
     },
     props: {
-        onPress: {
-            default: null,
-            required: false
-        },
         enableGridView: {
             type: Boolean,
             required: false

@@ -82490,6 +82490,11 @@ a {
   width: 100%;
   margin-top: 0;
 }
+#admin .sidebar .header .header-content .title {
+  font-size: 24px;
+  font-family: "GraphikBold", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #151f2d;
+}
 #admin .sidebar .content {
   position: relative;
   width: 100%;
@@ -82534,6 +82539,16 @@ a {
 }
 #admin .main .header .header-content {
   position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #fff;
+  box-shadow: 3px 6px 18px #ededf1;
+  z-index: 100;
+}
+#admin .main .header .header-content-fixed {
+  position: fixed;
   top: 15px;
   right: 40px;
   width: calc(100% - 370px);
@@ -82544,12 +82559,54 @@ a {
   border-radius: 8px;
 }
 @media (max-width: 720px) {
-  #admin .main .header .header-content {
+  #admin .main .header .header-content-fixed {
     top: 0;
     right: 0;
     width: 100%;
     border-radius: 0;
   }
+}
+#admin .main .header .header-content-main {
+  position: relative;
+  width: calc(100% - 30px);
+  height: 100%;
+  padding: 0 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+#admin .main .header .header-content-main .header-content-main-left {
+  width: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  display: none;
+}
+@media (max-width: 720px) {
+  #admin .main .header .header-content-main .header-content-main-left {
+    display: block;
+  }
+}
+#admin .main .header .header-content-main .header-content-main-center {
+  width: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+@media (max-width: 720px) {
+  #admin .main .header .header-content-main .header-content-main-center {
+    justify-content: center;
+  }
+}
+#admin .main .header .header-content-main .header-content-main-right {
+  width: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
 }
 @media (max-width: 720px) {
   #admin .main .header.header-double-mobile {

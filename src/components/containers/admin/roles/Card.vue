@@ -11,8 +11,8 @@
                 :index="indexMethod">
             </el-table-column>
             <el-table-column
-                prop="name"
-                label="Name"
+                prop="role_name"
+                label="Role Name"
                 width="180">
             </el-table-column>
             <el-table-column
@@ -76,7 +76,7 @@ export default {
     },
     computed: {
         ...mapState({
-            offset: (state) => state.storePermissions.offset,
+            offset: (state) => state.storeRoles.offset,
         })
     },
     methods: {

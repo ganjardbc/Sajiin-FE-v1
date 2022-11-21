@@ -99,7 +99,7 @@ export default {
     },
     computed: {
         ...mapState({
-            offset: (state) => state.storePayment.offset,
+            offset: (state) => state.storeShipment.offset,
         })
     },
     methods: {

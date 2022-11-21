@@ -1,20 +1,33 @@
 import Layout from '@/components/containers/admin/Layout'
-import Home from '@/components/containers/admin/Index'
+import Profile from '@/components/containers/user/profile/Index'
+import Settings from '@/components/containers/user/settings/Index'
+// import Home from '@/components/containers/admin/Index'
 import Bizpars from '@/components/containers/admin/bizpars/Index'
 import Payments from '@/components/containers/admin/payments/Index'
 import Shipments from '@/components/containers/admin/shipments/Index'
 import Categories from '@/components/containers/admin/categories/Index'
 import Shops from '@/components/containers/admin/shops/Index'
 import Permissions from '@/components/containers/admin/permissions/Index'
+import Roles from '@/components/containers/admin/roles/Index'
 
 const routes = {
     path: '/admin',
     component: Layout,
     children: [
         {
+            name: 'admin-profile',
+            path: 'profile',
+            component: Profile
+        },
+        {
+            name: 'admin-settings',
+            path: 'settings',
+            component: Settings
+        },
+        {
             name: 'admin-home',
             path: 'home',
-            component: Home
+            redirect: 'bizpars'
         },
         {
             name: 'admin-bizpars',
@@ -45,6 +58,11 @@ const routes = {
             name: 'admin-permissions',
             path: 'permissions',
             component: Permissions
+        },
+        {
+            name: 'admin-roles',
+            path: 'roles',
+            component: Roles
         }
     ]
 }

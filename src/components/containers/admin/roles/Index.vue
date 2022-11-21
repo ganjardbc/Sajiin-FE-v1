@@ -5,7 +5,7 @@
         <div class="left">
             <div class="display-flex space-between display-mobile margin margin-bottom-15px">
                 <div class="width width-75 width-mobile display-flex space-between">
-                    <h1 class="fonts big black bold">Categories</h1>
+                    <h1 class="fonts big black bold">Roles</h1>
                     <div class="display-flex">
                         <button 
                             class="btn btn-icon btn-white" 
@@ -21,7 +21,7 @@
                 </div>
                 <div class="width width-25 width-mobile">
                     <SearchField 
-                        :placeholder="'Search categories ..'" 
+                        :placeholder="'Search roles ..'" 
                         :enableResponsive="true" 
                         :onChange="(data) => onSearch(data)" />
                 </div>
@@ -74,7 +74,7 @@
 
             <AppPopupConfirmed 
                 v-if="visibleConfirmedDelete"
-                :title="'Delete this category ?'"
+                :title="'Delete this role ?'"
                 @onClickNo="onClickNoDelete"
                 @onClickYes="onClickYesDelete"
             />
@@ -134,35 +134,35 @@ export default {
     },
     computed: {
         ...mapState({
-            filter: (state) => state.storeCategory.filter,
-            form: (state) => state.storeCategory.form,
-            data: (state) => state.storeCategory.data,
-            totalRecord: (state) => state.storeCategory.totalRecord,
-            limit: (state) => state.storeCategory.limit,
-            loading: (state) => state.storeCategory.loading,
-            loadingForm: (state) => state.storeCategory.loadingForm,
-            typeForm: (state) => state.storeCategory.typeForm
+            filter: (state) => state.storeRoles.filter,
+            form: (state) => state.storeRoles.form,
+            data: (state) => state.storeRoles.data,
+            totalRecord: (state) => state.storeRoles.totalRecord,
+            limit: (state) => state.storeRoles.limit,
+            loading: (state) => state.storeRoles.loading,
+            loadingForm: (state) => state.storeRoles.loadingForm,
+            typeForm: (state) => state.storeRoles.typeForm
         }),
         typeForm: {
             get () {
-                return this.$store.state.storeCategory.typeForm
+                return this.$store.state.storeRoles.typeForm
             },
             set (value) {
-                this.$store.state.storeCategory.typeForm = value
+                this.$store.state.storeRoles.typeForm = value
             }
         },
     },
     methods: {
         ...mapActions({
-            getCategory: 'storeCategory/getData',
-            setPagination: 'storeCategory/setPagination',
-            resetFormData: 'storeCategory/resetFormData',
-            resetFilter: 'storeCategory/resetFilter',
-            setFormData: 'storeCategory/setFormData',
-            createData: 'storeCategory/createData',
-            updateData: 'storeCategory/updateData',
-            deleteData: 'storeCategory/deleteData',
-            uploadCover: 'storeCategory/uploadCover',
+            getRoles: 'storeRoles/getData',
+            setPagination: 'storeRoles/setPagination',
+            resetFormData: 'storeRoles/resetFormData',
+            resetFilter: 'storeRoles/resetFilter',
+            setFormData: 'storeRoles/setFormData',
+            createData: 'storeRoles/createData',
+            updateData: 'storeRoles/updateData',
+            deleteData: 'storeRoles/deleteData',
+            uploadCover: 'storeRoles/uploadCover',
         }),
         onSearch (data) {
             this.filter.search = data 
@@ -179,7 +179,7 @@ export default {
         // LIST DATA
         getData () {
             const token = this.$session.get('tokenBearer')
-            this.getCategory({ token })
+            this.getRoles({ token })
         },
         handleCurrentChange (value) {
             this.setPagination(value)
@@ -214,7 +214,7 @@ export default {
                             this.getData()
                         } else {
                             this.visibleAlert = true 
-                            this.titleAlert = 'Failed to save this category'
+                            this.titleAlert = 'Failed to save this role'
                         }
                     })
                     break
@@ -229,7 +229,7 @@ export default {
                             this.getData()
                         } else {
                             this.visibleAlert = true 
-                            this.titleAlert = 'Failed to edit this category'
+                            this.titleAlert = 'Failed to edit this role'
                         }
                     })
                     break
@@ -241,10 +241,10 @@ export default {
             this.visibleConfirmed = true
             switch (this.typeForm) {
                 case 'create':
-                    this.titleConfirmed = 'Save this category ?'
+                    this.titleConfirmed = 'Save this role ?'
                     break
                 case 'edit':
-                    this.titleConfirmed = 'Edit this category ?'
+                    this.titleConfirmed = 'Edit this role ?'
                     break
             }
         },
@@ -292,7 +292,7 @@ export default {
                     this.getData()
                 } else {
                     this.visibleAlert = true 
-                    this.titleAlert = 'Failed to delete this category'
+                    this.titleAlert = 'Failed to delete this role'
                 }
             })
         },

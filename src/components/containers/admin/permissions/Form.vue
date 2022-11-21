@@ -8,29 +8,16 @@
             <div class="margin margin-bottom-20px">
                 <div class="fonts fonts-13 black semibold">General Info</div>
                 <div class="field-group">
-                    <div class="field-label">Cover</div>
-                    <div class="width width-80px">
-                        <div class="image image-padding border border-full">
-                            <img 
-                                v-if="form.image" 
-                                :src="getCover" 
-                                alt="" 
-                                class="post-center">
-                            <i v-else class="post-middle-absolute icn fa fa-lg fa-image"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="field-group">
-                    <div class="field-label">Category ID</div>
+                    <div class="field-label">Permission ID</div>
                     <el-input 
                         placeholder=""
                         type="text"
-                        v-model="form.category_id"
+                        v-model="form.permission_id"
                         :disabled="true"></el-input>
                     <div 
-                        v-if="errorMessage.category_id" 
+                        v-if="errorMessage.permission_id" 
                         class="field-error">
-                        {{ errorMessage.category_id && errorMessage.category_id[0] }}
+                        {{ errorMessage.permission_id && errorMessage.permission_id[0] }}
                     </div>
                 </div>
                 <div class="field-group">
@@ -66,7 +53,7 @@
                 <div class="field-group">
                     <div class="field-label">Status</div>
                     <div class="display-flex space-between">
-                        <div class="fonts micro black">Is this category still active ?</div>
+                        <div class="fonts micro black">Is this permission still active ?</div>
                         <el-switch 
                             v-model="form.status"
                             :disabled="isDetailForm"
@@ -77,22 +64,6 @@
                         v-if="errorMessage.status" 
                         class="field-error">
                         {{ errorMessage.status && errorMessage.status[0] }}
-                    </div>
-                </div>
-                <div class="field-group">
-                    <div class="field-label">Available</div>
-                    <div class="display-flex space-between">
-                        <div class="fonts micro black">Is this category still available ?</div>
-                        <el-switch 
-                            v-model="form.is_available"
-                            :disabled="isDetailForm"
-                            :active-value="1"
-                            :inactive-value="0"></el-switch>
-                    </div>
-                    <div 
-                        v-if="errorMessage.is_available" 
-                        class="field-error">
-                        {{ errorMessage.is_available && errorMessage.is_available[0] }}
                     </div>
                 </div>
             </div>
@@ -113,21 +84,21 @@ export default {
     mounted () {},
     computed: {
         ...mapState({
-            form: (state) => state.storeCategory.form,
-            errorMessage: (state) => state.storeCategory.errorMessage,
-            typeForm: (state) => state.storeCategory.typeForm,
+            form: (state) => state.storePermissions.form,
+            errorMessage: (state) => state.storePermissions.errorMessage,
+            typeForm: (state) => state.storePermissions.typeForm,
         }),
         title () {
             let currentTitle = ''
             switch (this.typeForm) {
                 case 'create':
-                    currentTitle = 'Create Category'
+                    currentTitle = 'Create Permission'
                     break
                 case 'detail':
-                    currentTitle = 'Detail Category'
+                    currentTitle = 'Detail Permission'
                     break
                 case 'edit':
-                    currentTitle = 'Edit Category'
+                    currentTitle = 'Edit Permission'
                     break
             }
             return currentTitle
@@ -138,9 +109,6 @@ export default {
                 status = true 
             }
             return status
-        },
-        getCover () {
-            return this.form.image ? this.categoryImageThumbnailUrl + this.form.image : ''
         }
     },
     components: {

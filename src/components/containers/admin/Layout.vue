@@ -4,13 +4,11 @@
             <div class="header">
                 <div class="header-content display-flex space-between align-center">
                     <div class="width width-90px" style="margin-left: -5px;">
-                        <router-link :to="{name: 'admin-home'}" class="logo">
-                            <img :src="logo" alt="" style="width: 100%;">
-                        </router-link>
+                        <div class="title">Admin</div>
                     </div>
                     <button 
                         class="close-button btn btn-icon btn-white btn-circle"
-                        @click="onOpenSidebar">
+                        @click="onCloseSidebar">
                         <i class="fa fa-lg fa-times"></i>
                     </button>
                 </div>
@@ -18,27 +16,32 @@
             <div class="content">
                 <AppListMenu 
                     :data.sync="sidebar"
-                    :isSidebarSmall="true" />
+                    :isSidebarSmall="true"
+                    @onClick="onCloseSidebar" />
             </div>
         </div>
         <div class="main">
             <div class="header">
-                <div class="header-content display-flex space-between align-center">
-                    <div class="display-flex padding padding-left-15px padding-right-15px">
-                        <button 
-                            class="close-button btn btn-white btn-icon btn-circle margin margin-right-5px"
-                            @click="onOpenSidebar">
-                            <i class="icn fa fa-lw fa-bars"></i>
-                        </button>
-                        <router-link :to="{name: 'owner-home'}" class="btn btn-white btn-circle margin margin-right-5px">
-                            <i class="icn icn-left fa fa-lw fa-store"></i> Shops
-                        </router-link>
-                    </div>
-                    <div class="display-flex flex-end padding padding-left-15px padding-right-15px">
-                        <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
-                            <AppCardNotification />
+                <div class="header-content-fixed">
+                    <div class="header-content-main">
+                        <div class="header-content-main-left">
+                            <button 
+                                class="btn btn-white btn-icon btn-circle margin margin-right-5px"
+                                @click="onOpenSidebar">
+                                <i class="icn fa fa-lw fa-bars"></i>
+                            </button>
                         </div>
-                        <AppCardProfile :data.sync="dataUser" />
+                        <div class="header-content-main-center">
+                            <router-link :to="{name: 'admin-home'}" class="width width-90px">
+                                <img :src="logo" alt="" style="width: 100%;">
+                            </router-link>
+                        </div>
+                        <div class="header-content-main-right">
+                            <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
+                                <AppCardNotification />
+                            </div>
+                            <AppCardProfile :data.sync="dataUser" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -73,16 +76,27 @@ const defaultSidebar = [
     {
         icon: 'fa fa-lg fa-database', label: 'MASTERDATA', value: 0, disableMenu: false, menu: [
             {icon: 'fa fa-lg fa-list', label: 'Bizpars', value: 0, link: 'admin-bizpars', permission: 'bizpars'},
+            {icon: 'fa fa-lg fa-key', label: 'Permissions', value: 0, link: 'admin-permissions', permission: 'permissions'},
+            {icon: 'fa fa-lg fa-flag', label: 'Roles', value: 0, link: 'admin-roles', permission: 'roles'},
+            {icon: 'fa fa-lg fa-users', label: 'Users', value: 0, link: 'owner-profile', permission: 'users'},
+        ]
+    },
+    {
+        icon: 'fa fa-lg fa-database', label: 'SHOP', value: 0, disableMenu: false, menu: [
+            {icon: 'fa fa-lg fa-store', label: 'Shops', value: 0, link: 'admin-shops', permission: 'shops'},
             {icon: 'fa fa-lg fa-calculator', label: 'Payments', value: 0, link: 'admin-payments', permission: 'payments'},
             {icon: 'fa fa-lg fa-box-open', label: 'Shipments', value: 0, link: 'admin-shipments', permission: 'shipments'},
+        ]
+    },
+    {
+        icon: 'fa fa-lg fa-database', label: 'PRODUCT', value: 0, disableMenu: false, menu: [
             {icon: 'fa fa-lg fa-list-ol', label: 'Categories', value: 0, link: 'admin-categories', permission: 'categories'},
         ]
     },
     {
-        icon: 'fa fa-lg fa-database', label: 'ROLE & RIGHTS', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-key', label: 'Permissions', value: 0, link: 'admin-permissions', permission: 'permissions'},
-            {icon: 'fa fa-lg fa-flag', label: 'Roles', value: 0, link: 'owner-profile', permission: 'roles'},
-            {icon: 'fa fa-lg fa-users', label: 'Users', value: 0, link: 'owner-profile', permission: 'users'},
+        icon: 'fa fa-lg fa-database', label: 'PROFILE', value: 0, disableMenu: false, menu: [
+            {icon: 'fa fa-lg fa-user', label: 'Profile', value: 0, link: 'admin-profile', permission: 'users'},
+            {icon: 'fa fa-lg fa-cogs', label: 'Settings', value: 0, link: 'admin-settings', permission: 'users'},
         ]
     },
 ]
@@ -128,7 +142,10 @@ export default {
             setMultipleToast: 'toastmessage/setMultipleToast',
         }),
         onOpenSidebar () {
-            this.visibleSidebar = !this.visibleSidebar
+            this.visibleSidebar = true 
+        },
+        onCloseSidebar () {
+            this.visibleSidebar = false
         },
         onChangeMenu (data) {
             this.selectedLabel = this.menuShops[data].label

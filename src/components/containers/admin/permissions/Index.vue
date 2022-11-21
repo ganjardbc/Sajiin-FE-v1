@@ -3,24 +3,27 @@
         id="App" 
         :class="formClass ? 'content-form' : 'content-form hide'">
         <div class="left">
-            <div class="display-flex space-between margin margin-bottom-15px">
-                <h1 class="fonts big black bold">Permissions</h1>
-                <div class="display-flex">
-                    <button 
-                        class="btn btn-icon btn-white" 
-                        @click="onRefresh">
-                        <i class="fa fa-lw fa-retweet"></i>
-                    </button>
-                    <button 
-                        class="btn btn-icon btn-white" 
-                        @click="onCreate">
-                        <i class="fa fa-lw fa-plus" />
-                    </button>
+            <div class="display-flex space-between display-mobile margin margin-bottom-15px">
+                <div class="width width-75 width-mobile display-flex space-between">
+                    <h1 class="fonts big black bold">Permissions</h1>
+                    <div class="display-flex">
+                        <button 
+                            class="btn btn-icon btn-white" 
+                            @click="onRefresh">
+                            <i class="fa fa-lw fa-retweet"></i>
+                        </button>
+                        <button 
+                            class="btn btn-icon btn-white" 
+                            @click="onCreate">
+                            <i class="fa fa-lw fa-plus" />
+                        </button>
+                    </div>
+                </div>
+                <div class="width width-25 width-mobile">
                     <SearchField 
                         :placeholder="'Search permissions ..'" 
                         :enableResponsive="true" 
-                        :onChange="(data) => onSearch(data)" 
-                        style="margin-left: 5px;" />
+                        :onChange="(data) => onSearch(data)" />
                 </div>
             </div>
 
@@ -71,7 +74,7 @@
 
             <AppPopupConfirmed 
                 v-if="visibleConfirmedDelete"
-                :title="'Delete this category ?'"
+                :title="'Delete this permission ?'"
                 @onClickNo="onClickNoDelete"
                 @onClickYes="onClickYesDelete"
             />
@@ -151,7 +154,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            getCategory: 'storePermissions/getData',
+            getPermission: 'storePermissions/getData',
             setPagination: 'storePermissions/setPagination',
             resetFormData: 'storePermissions/resetFormData',
             resetFilter: 'storePermissions/resetFilter',
@@ -176,7 +179,7 @@ export default {
         // LIST DATA
         getData () {
             const token = this.$session.get('tokenBearer')
-            this.getCategory({ token })
+            this.getPermission({ token })
         },
         handleCurrentChange (value) {
             this.setPagination(value)
@@ -211,7 +214,7 @@ export default {
                             this.getData()
                         } else {
                             this.visibleAlert = true 
-                            this.titleAlert = 'Failed to save this category'
+                            this.titleAlert = 'Failed to save this permission'
                         }
                     })
                     break
@@ -226,7 +229,7 @@ export default {
                             this.getData()
                         } else {
                             this.visibleAlert = true 
-                            this.titleAlert = 'Failed to edit this category'
+                            this.titleAlert = 'Failed to edit this permission'
                         }
                     })
                     break
@@ -238,10 +241,10 @@ export default {
             this.visibleConfirmed = true
             switch (this.typeForm) {
                 case 'create':
-                    this.titleConfirmed = 'Save this category ?'
+                    this.titleConfirmed = 'Save this permission ?'
                     break
                 case 'edit':
-                    this.titleConfirmed = 'Edit this category ?'
+                    this.titleConfirmed = 'Edit this permission ?'
                     break
             }
         },
@@ -289,7 +292,7 @@ export default {
                     this.getData()
                 } else {
                     this.visibleAlert = true 
-                    this.titleAlert = 'Failed to delete this category'
+                    this.titleAlert = 'Failed to delete this permission'
                 }
             })
         },

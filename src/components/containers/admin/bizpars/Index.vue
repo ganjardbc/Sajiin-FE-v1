@@ -3,24 +3,27 @@
         id="App" 
         :class="formClass ? 'content-form' : 'content-form hide'">
         <div class="left">
-            <div class="display-flex space-between margin margin-bottom-15px">
-                <h1 class="fonts big black bold">Bizpars</h1>
-                <div class="display-flex">
-                    <button 
-                        class="btn btn-icon btn-white" 
-                        @click="onRefresh">
-                        <i class="fa fa-lw fa-retweet"></i>
-                    </button>
-                    <button 
-                        class="btn btn-icon btn-white" 
-                        @click="onCreate">
-                        <i class="fa fa-lw fa-plus" />
-                    </button>
+            <div class="display-flex space-between display-mobile margin margin-bottom-15px">
+                <div class="width width-75 width-mobile display-flex space-between">
+                    <h1 class="fonts big black bold">Bizpars</h1>
+                    <div class="display-flex">
+                        <button 
+                            class="btn btn-icon btn-white" 
+                            @click="onRefresh">
+                            <i class="fa fa-lw fa-retweet"></i>
+                        </button>
+                        <button 
+                            class="btn btn-icon btn-white" 
+                            @click="onCreate">
+                            <i class="fa fa-lw fa-plus" />
+                        </button>
+                    </div>
+                </div>
+                <div class="width width-25 width-mobile">
                     <SearchField 
                         :placeholder="'Search bizpars ..'" 
                         :enableResponsive="true" 
-                        :onChange="(data) => onSearch(data)" 
-                        style="margin-left: 5px;" />
+                        :onChange="(data) => onSearch(data)" />
                 </div>
             </div>
 

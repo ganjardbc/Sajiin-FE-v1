@@ -1,7 +1,7 @@
 <template>
     <div id="App" class="card-dashboard-container">
         <div class="padding padding-bottom-15px">
-            <h1 class="fonts big black bold">User Profile</h1>
+            <h1 class="fonts big black bold">Profile</h1>
         </div>
         <div 
             v-loading="loading" 
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="width width-70 width-mobile">
-                <div class="padding padding-left-30px">
+                <div class="padding padding-left-30px no-margin-padding">
                     <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">
                         <div class="fonts fonts-13 black semibold">General Info</div>
                         <div class="field-group">

@@ -27,16 +27,17 @@
             </div>
             <button 
                 slot="reference"
+                class="btn btn-icon btn-white btn-circle">
+                <i class="icn fa fa-lg fa-user"></i>
+            </button>
+            <!-- <button 
+                slot="reference"
                 class="btn btn-sekunder btn-circle">
                 <i class="icn icn-left fa fa-lw fa-user"></i> 
                 {{ data && data.username }}
                 <i class="icn icn-right fa fa-lw fa-caret-down"></i>
-            </button>
+            </button> -->
         </el-popover>
-
-        <!-- <button class="btn btn-icon btn-circle btn-white" @click="onLogout">
-            <i class="icn fa fa-lw fa-power-off"></i>
-        </button> -->
 
         <AppPopupConfirmed 
             v-if="visibleConfirmedLogout"

@@ -4,13 +4,11 @@
             <div class="header">
                 <div class="header-content display-flex space-between align-center">
                     <div class="width width-90px" style="margin-left: -5px;">
-                        <router-link :to="{name: 'owner-home'}" class="logo">
-                            <img :src="logo" alt="" style="width: 100%;">
-                        </router-link>
+                        <div class="title">Owner</div>
                     </div>
                     <button 
                         class="close-button btn btn-icon btn-white btn-circle"
-                        @click="onOpenSidebar">
+                        @click="onCloseSidebar">
                         <i class="fa fa-lg fa-times"></i>
                     </button>
                 </div>
@@ -18,27 +16,32 @@
             <div class="content">
                 <AppListMenu 
                     :data.sync="sidebar"
-                    :isSidebarSmall="true" />
+                    :isSidebarSmall="true"
+                    @onClick="onCloseSidebar" />
             </div>
         </div>
         <div class="main">
             <div class="header">
-                <div class="header-content display-flex space-between align-center">
-                    <div class="display-flex padding padding-left-15px padding-right-15px">
-                        <button 
-                            class="close-button btn btn-white btn-icon btn-circle margin margin-right-5px"
-                            @click="onOpenSidebar">
-                            <i class="icn fa fa-lw fa-bars"></i>
-                        </button>
-                        <router-link :to="{name: 'admin-home'}" class="btn btn-white btn-circle margin margin-right-5px">
-                            <i class="icn icn-left fa fa-lw fa-home"></i> Admin
-                        </router-link>
-                    </div>
-                    <div class="display-flex flex-end padding padding-left-15px padding-right-15px">
-                        <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
-                            <AppCardNotification />
+                <div class="header-content-fixed">
+                    <div class="header-content-main">
+                        <div class="header-content-main-left">
+                            <button 
+                                class="btn btn-white btn-icon btn-circle margin margin-right-5px"
+                                @click="onOpenSidebar">
+                                <i class="icn fa fa-lw fa-bars"></i>
+                            </button>
                         </div>
-                        <AppCardProfile :data.sync="dataUser" />
+                        <div class="header-content-main-center">
+                            <router-link :to="{name: 'owner-home'}" class="width width-90px">
+                                <img :src="logo" alt="" style="width: 100%;">
+                            </router-link>
+                        </div>
+                        <div class="header-content-main-right">
+                            <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
+                                <AppCardNotification />
+                            </div>
+                            <AppCardProfile :data.sync="dataUser" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,7 +79,7 @@ const defaultSidebar = [
         ]
     },
     {
-        icon: 'fa fa-lg fa-database', label: 'OTHERS', value: 0, disableMenu: false, menu: [
+        icon: 'fa fa-lg fa-database', label: 'PROFILE', value: 0, disableMenu: false, menu: [
             {icon: 'fa fa-lg fa-user', label: 'Profile', value: 0, link: 'owner-profile', permission: 'users'},
             {icon: 'fa fa-lg fa-cogs', label: 'Settings', value: 0, link: 'owner-settings', permission: 'users'},
         ]
@@ -124,7 +127,10 @@ export default {
             setMultipleToast: 'toastmessage/setMultipleToast',
         }),
         onOpenSidebar () {
-            this.visibleSidebar = !this.visibleSidebar
+            this.visibleSidebar = true 
+        },
+        onCloseSidebar () {
+            this.visibleSidebar = false 
         },
         onChangeMenu (data) {
             this.selectedLabel = this.menuShops[data].label

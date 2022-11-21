@@ -1,5 +1,6 @@
 import Layout from '@/components/containers/shop/Layout'
-import Home from '@/components/containers/shop/Index'
+import Profile from '@/components/containers/user/profile/Index'
+import Settings from '@/components/containers/user/settings/Index'
 import Dashboard from '@/components/containers/shop/dashboard/Index'
 import Cashier from '@/components/containers/shop/cashier/Index'
 import CashBook from '@/components/containers/shop/cashBook/Index'
@@ -8,7 +9,6 @@ import TaskLists from '@/components/containers/shop/taskLists/Index'
 import Products from '@/components/containers/shop/products/Index'
 import Employees from '@/components/containers/shop/employees/Index'
 import Shifts from '@/components/containers/shop/shifts/Index'
-import Settings from '@/components/containers/shop/settings/Index'
 import Notifications from '@/components/containers/shop/notifications/Index'
 import Tables from '@/components/containers/shop/tables/Index'
 import Reports from '@/components/containers/shop/reports/Index'
@@ -17,6 +17,16 @@ const routes = {
     path: '/shop/:shopId',
     component: Layout,
     children: [
+        {
+            name: 'shop-profile',
+            path: 'profile',
+            component: Profile
+        },
+        {
+            name: 'shop-settings',
+            path: 'settings',
+            component: Settings
+        },
         {
             name: 'shop-home',
             path: 'home',
@@ -66,11 +76,6 @@ const routes = {
             name: 'shop-shifts',
             path: 'shifts',
             component: Shifts
-        },
-        {
-            name: 'shop-settings',
-            path: 'settings',
-            component: Settings
         },
         {
             name: 'shop-notifications',

@@ -71,7 +71,7 @@ export default {
     },
     computed: {
         ...mapState({
-            offset: (state) => state.storeCategory.offset,
+            offset: (state) => state.storeBizpars.offset,
         })
     },
     methods: {

@@ -1,7 +1,7 @@
 import Layout from '@/components/containers/owner/Layout'
 import Shops from '@/components/containers/owner/shops/Index'
-import Profile from '@/components/containers/owner/profile/Index'
-import Settings from '@/components/containers/owner/settings/Index'
+import Profile from '@/components/containers/user/profile/Index'
+import Settings from '@/components/containers/user/settings/Index'
 
 const routes = {
     path: '/owner',
