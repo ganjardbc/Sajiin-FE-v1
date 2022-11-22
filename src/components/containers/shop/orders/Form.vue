@@ -1,14 +1,14 @@
 <template>
     <div id="App">
         <AppSideForm 
-            :title="title" 
+            :title="'Detail Order'" 
             :enableCustomFooter="true"
             :onClose="onClose">
             <div v-if="isActiveOrder(form)" slot="toolbar">
                 <button 
                     class="btn btn-small btn-grey with-border with-hover margin margin-right-10px"
                     @click="onChangeStatus(form, 'canceled')">
-                    Cancel this Order
+                    Cancel Order
                 </button>
             </div>
 
@@ -246,35 +246,6 @@ export default {
             set (value) {
                 this.$store.state.storeOrders.form.id = value
             }
-        },
-        title () {
-            let currentTitle = ''
-            switch (this.typeForm) {
-                case 'create':
-                    currentTitle = 'Create Order'
-                    break
-                case 'detail':
-                    currentTitle = 'Detail Order'
-                    break
-                case 'edit':
-                    currentTitle = 'Edit Order'
-                    break
-            }
-            return currentTitle
-        },
-        isDetailForm () {
-            let status = false 
-            if (this.typeForm === 'detail') {
-                status = true 
-            }
-            return status
-        },
-        isCreateForm () {
-            let status = false 
-            if (this.typeForm === 'create') {
-                status = true 
-            }
-            return status
         },
         getCover () {
             return this.form.image ? this.productImageThumbnailUrl + this.form.image : ''

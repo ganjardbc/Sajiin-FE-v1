@@ -172,6 +172,9 @@ export default {
                 ...data.order,
                 shop_image: data.shop.image,
                 details: data.details,
+                shop: data.shop,
+                payment: data.payment,
+                table: data.table,
             }
             this.$emit('onDetail', payload)
         },
@@ -182,6 +185,9 @@ export default {
                 ...data.order,
                 shop_image: data.shop.image,
                 details: data.details,
+                shop: data.shop,
+                payment: data.payment,
+                table: data.table,
             }
             this.$emit('onEdit', payload)
         },

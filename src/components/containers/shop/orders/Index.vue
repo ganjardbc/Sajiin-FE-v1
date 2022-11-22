@@ -455,7 +455,6 @@ export default {
         // CHECKOUT 
         onOpenCheckout (data) {
             this.visibleFormCheckout = true 
-            this.typeForm = 'edit'
             this.setFormData(data)
         },
         onCloseCheckout () {
