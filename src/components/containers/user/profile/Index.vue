@@ -31,84 +31,140 @@
             </div>
             <div class="width width-70 width-mobile">
                 <div class="padding padding-left-30px no-margin-padding">
-                    <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">
-                        <div class="fonts fonts-13 black semibold">General Info</div>
-                        <div class="field-group">
-                            <div class="field-label">ID</div>
-                            <el-input 
-                                placeholder=""
-                                type="text"
-                                v-model="form.id"
-                                :disabled="true"></el-input>
-                            <div 
-                                v-if="errorMessage.id" 
-                                class="field-error">
-                                {{ errorMessage.id && errorMessage.id[0] }}
+                    <AppTabs
+                        :isFull="true" 
+                        :selectedIndex.sync="selectedIndex" 
+                        :data="tabs" 
+                        :onChange="(data) => onChangeTabs(data)"
+                        class="margin margin-bottom-20px" />
+                    
+                    <div v-if="selectedIndex === 0">
+                        <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">
+                            <div class="fonts fonts-13 black semibold">General Info</div>
+                            <div class="field-group">
+                                <div class="field-label">ID</div>
+                                <el-input 
+                                    placeholder=""
+                                    type="text"
+                                    v-model="form.id"
+                                    :disabled="true"></el-input>
+                                <div 
+                                    v-if="errorMessage.id" 
+                                    class="field-error">
+                                    {{ errorMessage.id && errorMessage.id[0] }}
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <div class="field-label">Full Name</div>
+                                <el-input 
+                                    placeholder=""
+                                    type="text"
+                                    v-model="form.name"
+                                    :disabled="false"></el-input>
+                                <div 
+                                    v-if="errorMessage.name" 
+                                    class="field-error">
+                                    {{ errorMessage.name && errorMessage.name[0] }}
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <div class="field-label">Email</div>
+                                <div class="field-caption">To change your email just fill again your new email</div>
+                                <el-input 
+                                    placeholder=""
+                                    type="email"
+                                    v-model="form.email"
+                                    :disabled="false"></el-input>
+                                <div 
+                                    v-if="errorMessage.email" 
+                                    class="field-error">
+                                    {{ errorMessage.email && errorMessage.email[0] }}
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <div class="field-label">Username</div>
+                                <el-input 
+                                    placeholder=""
+                                    type="text"
+                                    v-model="form.username"
+                                    :disabled="true"></el-input>
+                                <div 
+                                    v-if="errorMessage.username" 
+                                    class="field-error">
+                                    {{ errorMessage.username && errorMessage.username[0] }}
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <div class="field-label">Available</div>
+                                <div class="display-flex space-between">
+                                    <div class="fonts micro black">Is this user still available ?</div>
+                                    <el-switch 
+                                        v-model="form.is_available"
+                                        :disabled="false"
+                                        :active-value="1"
+                                        :inactive-value="0"></el-switch>
+                                </div>
+                                <div 
+                                    v-if="errorMessage.is_available" 
+                                    class="field-error">
+                                    {{ errorMessage.is_available && errorMessage.is_available[0] }}
+                                </div>
                             </div>
                         </div>
-                        <div class="field-group">
-                            <div class="field-label">Username</div>
-                            <el-input 
-                                placeholder=""
-                                type="text"
-                                v-model="form.username"
-                                :disabled="true"></el-input>
-                            <div 
-                                v-if="errorMessage.username" 
-                                class="field-error">
-                                {{ errorMessage.username && errorMessage.username[0] }}
+
+                        <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">
+                            <div class="fonts fonts-13 black semibold">Private Info</div>
+                            <div class="field-group">
+                                <div class="field-label">Role</div>
+                                <el-input 
+                                    placeholder=""
+                                    type="text"
+                                    v-model="form.role_name"
+                                    :disabled="true"></el-input>
+                                <div 
+                                    v-if="errorMessage.role_name" 
+                                    class="field-error">
+                                    {{ errorMessage.role_name && errorMessage.role_name[0] }}
+                                </div>
                             </div>
                         </div>
-                        <div class="field-group">
-                            <div class="field-label">Full Name</div>
-                            <el-input 
-                                placeholder=""
-                                type="text"
-                                v-model="form.name"
-                                :disabled="false"></el-input>
-                            <div 
-                                v-if="errorMessage.name" 
-                                class="field-error">
-                                {{ errorMessage.name && errorMessage.name[0] }}
-                            </div>
+
+                        <div class="display-flex flex-end">
+                            <button class="btn btn-main btn-full" @click="onSaveSubmit">
+                                Update Data
+                            </button>
                         </div>
                     </div>
 
-                    <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">
-                        <div class="fonts fonts-13 black semibold">Private Info</div>
-                        <div class="field-group">
-                            <div class="field-label">Email</div>
-                            <el-input 
-                                placeholder=""
-                                type="email"
-                                v-model="form.email"
-                                :disabled="true"></el-input>
-                            <div 
-                                v-if="errorMessage.email" 
-                                class="field-error">
-                                {{ errorMessage.email && errorMessage.email[0] }}
+                    <div v-if="selectedIndex === 1">
+                        <div class="card no-padding-mobile box-shadow bg-white margin margin-bottom-20px">
+                            <div class="fonts fonts-13 black semibold">Change Password</div>
+                            <div class="field-group">
+                                <div class="field-label">New Password</div>
+                                <el-input 
+                                    placeholder=""
+                                    type="password"
+                                    v-model="form.password"
+                                    :disabled="false"
+                                    show-password></el-input>
+                                <div 
+                                    v-if="errorMessage.password" 
+                                    class="field-error">
+                                    {{ errorMessage.password && errorMessage.password[0] }}
+                                </div>
                             </div>
                         </div>
-                        <div class="field-group">
-                            <div class="field-label">Role</div>
-                            <el-input 
-                                placeholder=""
-                                type="text"
-                                v-model="form.role_name"
-                                :disabled="true"></el-input>
-                            <div 
-                                v-if="errorMessage.role_name" 
-                                class="field-error">
-                                {{ errorMessage.role_name && errorMessage.role_name[0] }}
-                            </div>
+
+                        <div class="display-flex flex-end">
+                            <button 
+                                :disabled="form.password ? false : true"
+                                class="btn btn-main btn-full" 
+                                @click="onSaveSubmit">
+                                Change Password
+                            </button>
                         </div>
                     </div>
 
-                    <div class="display-flex flex-end">
-                        <button class="btn btn-main" @click="onSaveSubmit">
-                            Save & Submit
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -152,11 +208,19 @@ import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../modules/AppFileUpload'
+import AppTabs from '../../../modules/AppTabs'
+
+const tabs = [
+    {id: 1, label: 'Data', status: 'active'},
+    {id: 2, label: 'Change Password', status: ''},
+]
 
 export default {
     name: 'App',
     data () {
         return {
+            tabs: tabs,
+            selectedIndex: 0,
             visibleUpdateCover: false,
             visibleConfirmedLogout: false, 
             visibleConfirmedUpdate: false,
@@ -169,6 +233,7 @@ export default {
         this.getData()
     },
     components: {
+        AppTabs,
         AppFileUpload,
         AppPopupConfirmed,
         AppPopupLoader,
@@ -193,6 +258,9 @@ export default {
             uploadCover: 'storeProfile/uploadCover',
             setDataAuth: 'storeAuth/setData',
         }),
+        onChangeTabs (data) {
+            this.selectedIndex = data 
+        },
         getData () {
             const token = this.$session.get('tokenBearer')
             this.getUser(token)

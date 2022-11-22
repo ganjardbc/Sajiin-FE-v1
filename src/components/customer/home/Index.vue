@@ -227,7 +227,7 @@ export default {
             this.visibleLoaderArticle = true
 
             const payload = {
-                limit: 5,
+                limit: 10,
                 offset: 0
             }
 

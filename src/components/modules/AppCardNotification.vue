@@ -8,7 +8,7 @@
             <button 
                 slot="reference"
                 class="btn btn-white btn-icon btn-circle">
-                <i class="icn fa fa-lg fa-bell"></i>
+                <i class="icn fa fa-lw fa-bell"></i>
             </button>
         </el-popover>
     </div>

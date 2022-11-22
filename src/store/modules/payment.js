@@ -33,7 +33,7 @@ export default {
         form: defaultForm(),
         errorMessage: defaultMessage(),
         dayLists: defaultDayLists(),
-        limit: 5,
+        limit: 10,
         offset: 0,
         totalRecord: 0,
         loading: false,
@@ -105,7 +105,7 @@ export default {
             commit('SET_MESSAGE_DATA', null)
         },
         resetFilter ({ commit, state }) {
-            state.limit = 5
+            state.limit = 10
             state.offset = 0
         },
         getData ({ commit, state }, data) {

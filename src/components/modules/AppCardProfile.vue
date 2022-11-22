@@ -26,17 +26,19 @@
                 </button>
             </div>
             <button 
-                slot="reference"
-                class="btn btn-icon btn-white btn-circle">
-                <i class="icn fa fa-lg fa-user"></i>
-            </button>
-            <!-- <button 
+                v-if="isBigButton"
                 slot="reference"
                 class="btn btn-sekunder btn-circle">
                 <i class="icn icn-left fa fa-lw fa-user"></i> 
                 {{ data && data.username }}
                 <i class="icn icn-right fa fa-lw fa-caret-down"></i>
-            </button> -->
+            </button>
+            <button 
+                v-else
+                slot="reference"
+                class="btn btn-icon btn-white btn-circle">
+                <i class="icn fa fa-lw fa-user"></i>
+            </button>
         </el-popover>
 
         <AppPopupConfirmed 
@@ -62,7 +64,8 @@ export default {
         AppPopupConfirmed
     },
     props: {
-        data: null 
+        data: null,
+        isBigButton: false,
     },
     methods: {
         ...mapActions({

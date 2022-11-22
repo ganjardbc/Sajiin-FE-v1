@@ -16,6 +16,14 @@ const defaultOrderType = () => {
     ]
 }
 
+const defaultOrderPaymentStatus = () => {
+    return [
+        {value: '', label: 'All'},
+        {value: '1', label: 'Paid'},
+        {value: '0', label: 'Unpaid'},
+    ]
+}
+
 const defaultMessage = () => {
     return {
         id: '',
@@ -82,7 +90,8 @@ export default {
         errorMessage: defaultMessage(),
         orderStatus: defaultOrderStatus(),
         orderType: defaultOrderType(),
-        limit: 5,
+        orderPaymentStatus: defaultOrderPaymentStatus(),
+        limit: 10,
         offset: 0,
         totalRecord: 0,
         loading: false,
@@ -173,7 +182,7 @@ export default {
             commit('SET_MESSAGE_DATA', null)
         },
         resetFilter ({ commit, state }) {
-            state.limit = 5
+            state.limit = 10
             state.offset = 0
         },
         getData ({ commit, state }, data) {

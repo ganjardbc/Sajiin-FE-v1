@@ -68,7 +68,7 @@ export default {
             state.offset = (data - 1) * state.limit
         },
         resetFilter ({ commit, state }) {
-            state.limit = 50
+            state.limit = 100
             state.offset = 0
         },
         getData ({ commit, state }, data) {

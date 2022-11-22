@@ -16,7 +16,7 @@
                     style="width: 200px; padding-bottom: 30%;">
                     <img 
                         :src="logo" 
-                        alt="SAJI-IN"
+                        alt=""
                         class="post-center" 
                         style="width: 100%;">
                 </div>
@@ -101,8 +101,6 @@ export default {
         async submit () {
             const res = await this.login(this.form)
             if (res.data.status === 'ok') {
-                console.log('submit', res)
-
                 const data = res.data.data 
 
                 this.$session.set('token', data.token)
@@ -113,17 +111,11 @@ export default {
                 this.$session.set('employee', data.employee)
                 this.$session.set('permissions', data.permissions)
 
-                this.$router.replace({ name: 'owner-home' })
-
-                // if (data) {
-                //     const payload = {
-                //         id: data.user.id,
-                //         name: data.user.name,
-                //         email: data.user.email,
-                //         token: data.token,
-                //     }
-                //     this.$socket.emit('admin', payload)
-                // }
+                if (data.user.role_name === 'admin') {
+                    this.$router.replace({ name: 'admin-home' })
+                } else {
+                    this.$router.replace({ name: 'owner-home' })
+                }
             }
         }
     },
@@ -131,7 +123,12 @@ export default {
     beforeCreate: function () {
         if (this.$session.get('token')) 
         {
-            this.$router.replace({ name: 'owner-home' })
+            const roleName = this.$session.get('user').role_name
+            if (roleName === 'admin') {
+                this.$router.replace({ name: 'admin-home' })
+            } else {
+                this.$router.replace({ name: 'owner-home' })
+            }
         }
     }
 }

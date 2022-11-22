@@ -9,7 +9,7 @@
                     <div class="display-flex flex-start align-center wrap" style="width: calc(100% - 30px);">
                         <div class="fonts fonts-10 semibold margin margin-right-10px">Order</div>
                         <div class="fonts fonts-10 grey margin margin-right-10px">{{ dt.order.created_at | moment("DD MMM YYYY") }}</div>
-                        <AppCardCapsule :data="dt.order.status" class="margin margin-right-10px" />
+                        <AppCardCapsule :data="dt.order.status" class="margin margin-right-10px margin-top-5px margin-bottom-5px" />
                         <div class="fonts fonts-10 grey margin margin-right-10px">{{ dt.order.order_id }}</div>
                     </div>
                 </div>

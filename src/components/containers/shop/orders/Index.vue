@@ -10,11 +10,20 @@
                             @click="onRefresh">
                             <i class="fa fa-lw fa-retweet"></i>
                         </button>
-                        <!-- <button 
-                            class="btn btn-icon btn-white" 
-                            @click="onCreate">
-                            <i class="fa fa-lw fa-plus" />
-                        </button> -->
+                        <el-select 
+                            v-model="filter.payment_status" 
+                            @change="handleFilterSearch"
+                            clearable
+                            placeholder="Select"
+                            no-data-text="No Data Disaplayed"
+                            class="width width-100px margin margin-right-15px no-margin-padding">
+                            <el-option
+                                v-for="(item, i) in orderPaymentStatus"
+                                :key="i"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="width width-25 width-mobile">
@@ -137,7 +146,7 @@ import FormCheckout from './checkOut'
 
 const tabs = [
     {id: 1, label: 'All', status: 'active'},
-    {id: 2, label: 'New Order', status: ''},
+    {id: 2, label: 'New', status: ''},
     {id: 3, label: 'On Progress', status: ''},
     {id: 4, label: 'Done', status: ''},
     {id: 5, label: 'Canceled', status: ''},
@@ -186,6 +195,7 @@ export default {
             form: (state) => state.storeOrders.form,
             data: (state) => state.storeOrders.data,
             totalRecord: (state) => state.storeOrders.totalRecord,
+            orderPaymentStatus: (state) => state.storeOrders.orderPaymentStatus,
             limit: (state) => state.storeOrders.limit,
             loading: (state) => state.storeOrders.loading,
             loadingForm: (state) => state.storeOrders.loadingForm,
@@ -242,23 +252,18 @@ export default {
             switch (this.selectedIndex) {
                 case 0:
                     this.filter.status = ''
-                    this.filter.payment_status = ''
                     break
                 case 1:
                     this.filter.status = 'new-order'
-                    this.filter.payment_status = ''
                     break
                 case 2:
                     this.filter.status = 'on-progress'
-                    this.filter.payment_status = ''
                     break
                 case 3:
                     this.filter.status = 'done'
-                    this.filter.payment_status = '1'
                     break
                 case 4:
                     this.filter.status = 'canceled'
-                    this.filter.payment_status = ''
                     break
             }
             this.handleFilterSearch()

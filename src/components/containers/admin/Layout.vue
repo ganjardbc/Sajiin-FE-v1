@@ -37,6 +37,11 @@
                             </router-link>
                         </div>
                         <div class="header-content-main-right">
+                            <router-link :to="{name: 'owner-home'}" class="margin margin-right-5px">
+                                <button class="btn btn-white btn-icon btn-circle">
+                                    <i class="icn fa fa-lw fa-store"></i>
+                                </button>
+                            </router-link>
                             <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
                                 <AppCardNotification />
                             </div>
@@ -78,12 +83,11 @@ const defaultSidebar = [
             {icon: 'fa fa-lg fa-list', label: 'Bizpars', value: 0, link: 'admin-bizpars', permission: 'bizpars'},
             {icon: 'fa fa-lg fa-key', label: 'Permissions', value: 0, link: 'admin-permissions', permission: 'permissions'},
             {icon: 'fa fa-lg fa-flag', label: 'Roles', value: 0, link: 'admin-roles', permission: 'roles'},
-            {icon: 'fa fa-lg fa-users', label: 'Users', value: 0, link: 'owner-profile', permission: 'users'},
+            {icon: 'fa fa-lg fa-users', label: 'Users', value: 0, link: 'admin-users', permission: 'users'},
         ]
     },
     {
         icon: 'fa fa-lg fa-database', label: 'SHOP', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-store', label: 'Shops', value: 0, link: 'admin-shops', permission: 'shops'},
             {icon: 'fa fa-lg fa-calculator', label: 'Payments', value: 0, link: 'admin-payments', permission: 'payments'},
             {icon: 'fa fa-lg fa-box-open', label: 'Shipments', value: 0, link: 'admin-shipments', permission: 'shipments'},
         ]

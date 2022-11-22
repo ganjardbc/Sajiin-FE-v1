@@ -186,7 +186,7 @@ export default {
 
             const token = 'Bearer '.concat(this.$cookies.get('token'))
             const payload = {
-                limit: 5,
+                limit: 10,
                 offset: 0
             }
             

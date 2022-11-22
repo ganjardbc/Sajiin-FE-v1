@@ -1,20 +1,36 @@
 import axios from 'axios'
 
-const defaultDayLists = () => {
-    return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const defaultMessage = () => {
+    return {
+        id: '',
+        image: '',
+        name: '',
+        username: '',
+        email: '',
+        password: '',
+        email_verified_at: '',
+        provider: '',
+        enabled: '',
+        status: '',
+        role_id: '',
+        owner_id: ''
+    }
 }
 
 const defaultForm = () => {
     return {
         id: '',
-        table_id: '',
-        code: '',
         image: '',
         name: '',
-        status: 'active',
-        is_available: 0,
-        description: '',
-        shop_id: ''
+        username: '',
+        email: '',
+        password: '',
+        email_verified_at: '',
+        provider: '',
+        enabled: 0,
+        status: 'inactive',
+        role_id: '',
+        owner_id: ''
     }
 }
 
@@ -23,8 +39,7 @@ export default {
 
     state: {
         form: defaultForm(),
-        errorMessage: defaultForm(),
-        dayLists: defaultDayLists(),
+        errorMessage: defaultMessage(),
         limit: 10,
         offset: 0,
         totalRecord: 0,
@@ -36,6 +51,17 @@ export default {
         filter: {
             search: '',
             status: '',
+        },
+        role: {
+            limit: 10,
+            offset: 0,
+            totalRecord: 0,
+            loading: false,
+            data: [],
+            filter: {
+                search: '',
+                status: 'active',
+            },
         }
     },
 
@@ -43,7 +69,7 @@ export default {
 
     mutations: {
         RESET_ERROR_MESSAGE (state) {
-            state.errorMessage = defaultForm()
+            state.errorMessage = defaultMessage()
         },
         SET_LOADING (state, value) {
             state.loading = value
@@ -64,17 +90,15 @@ export default {
             if (value) {
                 state.errorMessage = value 
             } else {
-                state.errorMessage = defaultForm() 
+                state.errorMessage = defaultMessage() 
             }
         },
         SET_FORM_DATA (state, value) {
             if (value) {
                 state.form = value
             } else {
-                const time = new Date().getTime()
                 state.form = {
                     ...defaultForm(),
-                    table_id: `TH-${time}`,
                     status: 'active',
                     is_available: 1
                 }
@@ -83,7 +107,15 @@ export default {
         SET_TOTAL_RECORD (state, value) {
             state.totalRecord = value
         },
-
+        SET_ROLE_LOADING (state, value) {
+            state.role.loading = value
+        },
+        SET_ROLE_TOTAL_RECORD (state, value) {
+            state.role.totalRecord = value
+        },
+        SET_ROLE_DATA (state, value) {
+            state.role.data = value
+        },
     },
 
     actions: {
@@ -103,7 +135,6 @@ export default {
         },
         getData ({ commit, state }, data) {
             commit('SET_LOADING', true)
-            commit('SET_LOAD_MORE', false)
 
             let dataPrev = []
 
@@ -112,10 +143,9 @@ export default {
                 offset: state.offset,
                 search: state.filter.search,
                 status: state.filter.status,
-                shop_id: data.shop_id
             }
 
-            return axios.post('/api/table/getAll', params, { 
+            return axios.post('/api/user/getAll', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -127,12 +157,6 @@ export default {
 
                     commit('SET_DATA', dataPrev)
                     commit('SET_TOTAL_RECORD', res.data.total_record)
-
-                    if (payload.length < state.limit) {
-                        commit('SET_LOAD_MORE', false)
-                    } else {
-                        commit('SET_LOAD_MORE', true)
-                    }
 
                     return res
                 })
@@ -150,7 +174,7 @@ export default {
                 ...data
             }
 
-            return axios.post('/api/table/post', params, { 
+            return axios.post('/api/user/post', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -176,7 +200,7 @@ export default {
                 ...data
             }
 
-            return axios.post('/api/table/update', params, { 
+            return axios.post('/api/user/update', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -202,7 +226,7 @@ export default {
                 ...data
             }
 
-            return axios.post('/api/table/delete', params, { 
+            return axios.post('/api/user/delete', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -219,10 +243,10 @@ export default {
             commit('SET_LOADING_FORM', true)
     
             let params = new FormData()
-            params.append('table_id', data.table_id)
+            params.append('id', data.id)
             params.append('image', data.image)
     
-            return axios.post('/api/table/uploadImage', params, { 
+            return axios.post('/api/user/uploadImage', params, { 
                     headers: { Authorization: data.token } 
                 })
                 .then((res) => {
@@ -235,6 +259,39 @@ export default {
                     commit('SET_LOADING_FORM', false)
                 })
         },
+        getDataRole ({ commit, state }, data) {
+            commit('SET_ROLE_LOADING', true)
 
+            let dataPrev = []
+
+            const params = {
+                limit: state.role.limit,
+                offset: state.role.offset,
+                search: state.role.filter.search,
+                status: state.role.filter.status,
+            }
+
+            return axios.post('/api/role/getAll', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    const payload = res.data.data 
+
+                    payload && payload.map((dt) => {
+                        dataPrev.push({ ...dt })
+                    })
+
+                    commit('SET_ROLE_DATA', dataPrev)
+                    commit('SET_ROLE_TOTAL_RECORD', res.data.total_record)
+
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_ROLE_LOADING', false)
+                })
+        },
     }
 }

@@ -9,6 +9,7 @@ import Categories from '@/components/containers/admin/categories/Index'
 import Shops from '@/components/containers/admin/shops/Index'
 import Permissions from '@/components/containers/admin/permissions/Index'
 import Roles from '@/components/containers/admin/roles/Index'
+import Users from '@/components/containers/admin/users/Index'
 
 const routes = {
     path: '/admin',
@@ -63,6 +64,11 @@ const routes = {
             name: 'admin-roles',
             path: 'roles',
             component: Roles
+        },
+        {
+            name: 'admin-users',
+            path: 'users',
+            component: Users
         }
     ]
 }
