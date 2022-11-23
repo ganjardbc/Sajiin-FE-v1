@@ -129,7 +129,6 @@ export default {
     },
     mounted () {
         this.getShopData()
-        this.getCategoryData()
     },
     components: {
         VueLoadImage,
@@ -146,7 +145,6 @@ export default {
             getUserData: 'storeAuth/getUserData',
             setShop: 'storeSelectedShop/setSelectedData',
             getShop: 'storeSelectedShop/getData',
-            getCategory: 'storeCategory/getData',
 
             // old store
             setToast: 'toast/setToast',
@@ -164,11 +162,7 @@ export default {
                     this.setShopData()
                 })
         },
-        getCategoryData () {
-            const token = this.$session.get('tokenBearer')
-            this.filterCategory.status = 'active'
-            this.getCategory({ token })
-        },
+        
         onOpenSidebar () {
             this.visibleSidebar = true 
         },
@@ -214,7 +208,6 @@ export default {
     computed: {
         ...mapState({
             data: (state) => state.storeAuth.data,
-            filterCategory: (state) => state.storeCategory.filter,
             dataShop: (state) => state.storeSelectedShop.data
         }),
         dataUser () {

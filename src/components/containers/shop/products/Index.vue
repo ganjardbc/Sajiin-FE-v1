@@ -124,6 +124,7 @@ export default {
         }
     },
     mounted () {
+        this.getCategoryData()
         this.getData()
     },
     components: {
@@ -181,6 +182,7 @@ export default {
             setLoadingForm: 'storeProduct/setLoadingForm',
             updateDataVarian: 'storeProductDetail/updateData',
             setFormDataVarian: 'storeProductDetail/setFormData',
+            getCategory: 'storeProduct/getDataCategory',
         }),
         onSearch (data) {
             this.filter.search = data 
@@ -195,6 +197,10 @@ export default {
         },
 
         // LIST DATA
+        getCategoryData () {
+            const token = this.$session.get('tokenBearer')
+            this.getCategory({ token })
+        },
         getData () {
             const token = this.$session.get('tokenBearer')
             const shop_id = this.shopId

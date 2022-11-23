@@ -32,6 +32,17 @@ export default {
         filter: {
             search: '',
             status: '',
+        },
+        category: {
+            limit: 10,
+            offset: 0,
+            totalRecord: 0,
+            loading: false,
+            data: [],
+            filter: {
+                search: '',
+                status: 'active',
+            },
         }
     },
 
@@ -80,6 +91,15 @@ export default {
             state.totalRecord = value
         },
 
+        SET_CATEGORY_LOADING (state, value) {
+            state.category.loading = value
+        },
+        SET_CATEGORY_TOTAL_RECORD (state, value) {
+            state.category.totalRecord = value
+        },
+        SET_CATEGORY_DATA (state, value) {
+            state.category.data = value
+        },
     },
 
     actions: {
@@ -234,6 +254,39 @@ export default {
                     commit('SET_LOADING_FORM', false)
                 })
         },
+        getDataCategory ({ commit, state }, data) {
+            commit('SET_CATEGORY_LOADING', true)
 
+            let dataPrev = []
+
+            const params = {
+                limit: state.category.limit,
+                offset: state.category.offset,
+                search: state.category.filter.search,
+                status: state.category.filter.status,
+            }
+
+            return axios.post('/api/category/getAll', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    const payload = res.data.data 
+
+                    payload && payload.map((dt) => {
+                        dataPrev.push({ ...dt })
+                    })
+
+                    commit('SET_CATEGORY_DATA', dataPrev)
+                    commit('SET_CATEGORY_TOTAL_RECORD', res.data.total_record)
+
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_CATEGORY_LOADING', false)
+                })
+        },
     }
 }

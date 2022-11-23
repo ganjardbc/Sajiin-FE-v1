@@ -142,7 +142,7 @@ export default {
         ...mapState({
             form: (state) => state.storeProduct.form,
             errorMessage: (state) => state.storeProduct.errorMessage,
-            category: (state) => state.storeCategory.data,
+            category: (state) => state.storeProduct.category.data,
             typeForm: (state) => state.storeProduct.typeForm,
         }),
         isDetailForm () {
