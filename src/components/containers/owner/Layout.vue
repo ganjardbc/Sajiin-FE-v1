@@ -80,8 +80,8 @@ const defaultSidebar = [
     },
     {
         icon: 'fa fa-lg fa-database', label: 'PROFILE', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-user', label: 'Profile', value: 0, link: 'owner-profile', permission: 'users'},
-            {icon: 'fa fa-lg fa-cogs', label: 'Settings', value: 0, link: 'owner-settings', permission: 'users'},
+            {icon: 'fa fa-lg fa-user', label: 'Profile', value: 0, link: 'owner-profile', permission: 'profile'},
+            {icon: 'fa fa-lg fa-cogs', label: 'Settings', value: 0, link: 'owner-settings', permission: 'settings'},
         ]
     },
 ]

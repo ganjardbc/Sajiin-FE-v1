@@ -1,7 +1,7 @@
 import Layout from '@/components/containers/admin/Layout'
 import Profile from '@/components/containers/user/profile/Index'
 import Settings from '@/components/containers/user/settings/Index'
-// import Home from '@/components/containers/admin/Index'
+import Home from '@/components/containers/admin/Index'
 import Bizpars from '@/components/containers/admin/bizpars/Index'
 import Payments from '@/components/containers/admin/payments/Index'
 import Shipments from '@/components/containers/admin/shipments/Index'
@@ -28,7 +28,7 @@ const routes = {
         {
             name: 'admin-home',
             path: 'home',
-            redirect: 'bizpars'
+            component: Home
         },
         {
             name: 'admin-bizpars',

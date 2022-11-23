@@ -102,8 +102,8 @@ const defaultSidebar = [
     },
     {
         icon: 'fa fa-lg fa-database', label: 'PROFILE', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-user', label: 'Profile', value: 0, link: 'shop-profile', permission: 'users'},
-            {icon: 'fa fa-lg fa-cogs', label: 'Settings', value: 0, link: 'shop-settings', permission: 'users'},
+            {icon: 'fa fa-lg fa-user', label: 'Profile', value: 0, link: 'shop-profile', permission: 'profile'},
+            {icon: 'fa fa-lg fa-cogs', label: 'Settings', value: 0, link: 'shop-settings', permission: 'settings'},
         ]
     },
 ]
