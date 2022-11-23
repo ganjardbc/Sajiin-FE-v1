@@ -37,11 +37,6 @@
                             </router-link>
                         </div>
                         <div class="header-content-main-right">
-                            <router-link :to="{name: 'owner-home'}" class="margin margin-right-5px">
-                                <button class="btn btn-white btn-icon btn-circle">
-                                    <i class="icn fa fa-lw fa-store"></i>
-                                </button>
-                            </router-link>
                             <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
                                 <AppCardNotification />
                             </div>
@@ -78,6 +73,11 @@ import AppCardNotification from '../../modules/AppCardNotification'
 import AppCardProfile from '../../modules/AppCardProfile'
 
 const defaultSidebar = [
+    {
+        icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: true, menu: [
+            {icon: 'fa fa-lg fa-store', label: 'Visit My Shop', value: 0, link: 'owner-home', permission: 'dashboard'},
+        ]
+    },
     {
         icon: 'fa fa-lg fa-database', label: 'MASTERDATA', value: 0, disableMenu: false, menu: [
             {icon: 'fa fa-lg fa-list', label: 'Bizpars', value: 0, link: 'admin-bizpars', permission: 'bizpars'},

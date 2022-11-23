@@ -78,6 +78,11 @@ import SelectShopField from '../../modules/SelectShopField'
 
 const defaultSidebar = [
     {
+        icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: true, menu: [
+            {icon: 'fa fa-lg fa-home', label: 'Back to Home', value: 0, link: 'owner-home', permission: 'dashboard'},
+        ]
+    },
+    {
         icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: false, menu: [
             {icon: 'fa fa-lg fa-tachometer-alt', label: 'Dashboard', value: 0, link: 'shop-home', permission: 'dashboard'},
         ]
