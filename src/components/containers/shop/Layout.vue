@@ -91,7 +91,7 @@ const defaultSidebar = [
         icon: 'fa fa-lg fa-database', label: 'ORDER', value: 0, disableMenu: false, menu: [
             {icon: 'fa fa-lg fa-laptop', label: 'Cashier', value: 0, link: 'shop-cashier', permission: 'cashier'},
             {icon: 'fa fa-lg fa-list-ul', label: 'Orders', value: 0, link: 'shop-orders', permission: 'orders'},
-            {icon: 'fa fa-lg fa-calendar-alt', label: 'Reports', value: 0, link: 'shop-reports', permission: 'users'},
+            {icon: 'fa fa-lg fa-calendar-alt', label: 'Reports', value: 0, link: 'shop-reports', permission: 'reports'},
         ]
     },
     {

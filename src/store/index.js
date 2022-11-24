@@ -2,19 +2,21 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 // old store
-import auth from './auth'
-import cart from './cart'
-import toast from './toast'
-import order from './order'
-import wishelist from './wishelist'
-import customer from './customer'
-import table from './table'
-import store from './store'
-import visitor from './visitor'
-import toastmessage from './toastmessage'
-import notification from './notification'
+// import auth from './auth'
+// import cart from './cart'
+// import toast from './toast'
+// import order from './order'
+// import wishelist from './wishelist'
+// import customer from './customer'
+// import table from './table'
+// import store from './store'
+// import visitor from './visitor'
+// import toastmessage from './toastmessage'
+// import notification from './notification'
 
 // new store
+import toast from './modules/toast'
+import toastmessage from './modules/toastmessage'
 import storeAuth from './modules/auth'
 import storeProfile from './modules/profile'
 import storeDashboard from './modules/dashboard'
@@ -39,12 +41,15 @@ import storePermissions from './modules/permissions'
 import storeRoles from './modules/roles'
 import storeRolePermissions from './modules/rolePermissions'
 import storeUsers from './modules/users'
+import storeReports from './modules/reports'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
     // new store
+    toast,
+    toastmessage,
     storeAuth,
     storeProfile,
     storeDashboard,
@@ -69,18 +74,19 @@ export default new Vuex.Store({
     storeRoles,
     storeRolePermissions,
     storeUsers,
+    storeReports,
 
     // old store
-    auth,
-    cart,
-    toast,
-    wishelist,
-    order,
-    customer,
-    table,
-    store,
-    visitor,
-    toastmessage,
-    notification
+    // auth,
+    // cart,
+    // toast,
+    // wishelist,
+    // order,
+    // customer,
+    // table,
+    // store,
+    // visitor,
+    // toastmessage,
+    // notification
   }
 })
