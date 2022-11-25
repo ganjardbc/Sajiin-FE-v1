@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const defaultList = () => {
     return {
-        email: '',
+        username: '',
         password: '',
         remember: false
     }
@@ -24,6 +24,9 @@ export default {
         RESET_ERROR_MESSAGE (state) {
             state.errorMessage = defaultList()
         },
+        SET_ERROR_MESSAGE (state, value) {
+            state.errorMessage = value 
+        },
         SET_DATA (state, value) {
             state.data = value
         },
@@ -40,15 +43,32 @@ export default {
             commit('RESET_ERROR_MESSAGE')
             commit('SET_LOADING', true)
 
-            return axios.post('/api/auth/login', data)
+            return axios.post('/api/auth/loginUsername', data)
                 .then((res) => {
                     const status = res.data.status
                     const message = res.data.message
-                    if (status === 'email-invalid') {
-                        state.errorMessage.email = message
+                    if (status === 'username-invalid') {
+                        state.errorMessage.username = message
                     } 
                     if (status === 'password-invalid') {
                         state.errorMessage.password = message
+                    }
+                    return res
+                })
+                .finally(() => {
+                    commit('SET_LOADING', false)
+                })
+        },
+        register ({ commit, state }, data) {
+            commit('RESET_ERROR_MESSAGE')
+            commit('SET_LOADING', true)
+
+            return axios.post('/api/auth/register', data)
+                .then((res) => {
+                    const status = res.data.status
+                    if (status === 'invalide') {
+                        const message = res.data.message
+                        commit('SET_ERROR_MESSAGE', message)
                     }
                     return res
                 })

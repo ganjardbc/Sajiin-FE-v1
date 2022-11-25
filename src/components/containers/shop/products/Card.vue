@@ -85,34 +85,35 @@
                 :title="`Varians (${dt.details.length})`"
                 class="margin margin-top-15px">
                 <div class="width width-100" style="overflow-y: auto; max-height: 400px;">
-                    <div v-for="(detail, j) in dt.details" :key="j"
-                        class="card box-shadow bg-white margin margin-top-15px margin-bottom-15px">
-                        <div class="display-flex space-between">
-                            <div style="width: calc(100% - 100px);">
-                                <div class="fonts fonts-11 semibold">{{ detail.name }}</div>
-                                <AppCardCaption 
-                                    icon="fa fa-lg fa-calculator" 
-                                    :caption="format(detail.price)" />
-                                <AppCardCaption 
-                                    icon="fa fa-lg fa-info-circle" 
-                                    :caption="detail.description" />
-                                <AppCardCaption 
-                                    icon="fa fa-lg fa-history" 
-                                    :caption="detail.created_at | moment('from', 'now')" />
+                    <div v-for="(detail, j) in dt.details" :key="j" class="margin margin-15px">
+                        <div class="card box-shadow bg-white">
+                            <div class="display-flex space-between">
+                                <div style="width: calc(100% - 100px);">
+                                    <div class="fonts fonts-11 semibold">{{ detail.name }}</div>
+                                    <AppCardCaption 
+                                        icon="fa fa-lg fa-calculator" 
+                                        :caption="format(detail.price)" />
+                                    <AppCardCaption 
+                                        icon="fa fa-lg fa-info-circle" 
+                                        :caption="detail.description" />
+                                    <AppCardCaption 
+                                        icon="fa fa-lg fa-history" 
+                                        :caption="detail.created_at | moment('from', 'now')" />
+                                </div>
+                                <div class="width width-100px display-flex flex-end">
+                                    <AppCardCapsule :data="detail.status" />
+                                </div>
                             </div>
-                            <div class="width width-100px display-flex flex-end">
-                                <AppCardCapsule :data="detail.status" />
+                            <div class="display-flex space-between padding padding-top-15px">
+                                <div class="fonts micro black">
+                                    Change varian status to {{ detail.status === 'active' ? 'Inactive' : 'Active' }} ?
+                                </div>
+                                <el-switch 
+                                    v-model="detail.status"
+                                    :active-value="'active'"
+                                    :inactive-value="'inactive'"
+                                    @change="onChangeVarianStatus(detail)"></el-switch>
                             </div>
-                        </div>
-                        <div class="display-flex space-between padding padding-top-15px">
-                            <div class="fonts micro black">
-                                Change varian status to {{ detail.status === 'active' ? 'Inactive' : 'Active' }} ?
-                            </div>
-                            <el-switch 
-                                v-model="detail.status"
-                                :active-value="'active'"
-                                :inactive-value="'inactive'"
-                                @change="onChangeVarianStatus(detail)"></el-switch>
                         </div>
                     </div>
                 </div>

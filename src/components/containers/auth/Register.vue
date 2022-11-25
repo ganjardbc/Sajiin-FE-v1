@@ -1,6 +1,6 @@
 <template>
     <div 
-        id="Login" 
+        id="Register" 
         class="post-top" 
         style="padding-left: 10px; padding-right: 10px;">
         <div 
@@ -11,21 +11,53 @@
                 action="#" 
                 @submit.prevent="submit" 
                 class="width width-100 padding padding-top-20px padding-bottom-20px">
-                <div class="width width-150px width-center">
-                    <div 
-                        class="image image-full image-center bg-transparent" 
-                        style="padding-bottom: 40%;">
-                        <img 
-                            :src="logo" 
-                            alt=""
-                            class="post-center" 
-                            style="width: 100%;">
+                <div class="width width-100 display-flex space-between align-center">
+                    <div class="width width-100px">
+                        <div class="image image-full image-center bg-transparent" style="padding-bottom: 40%;">
+                            <img 
+                                :src="logo" 
+                                alt=""
+                                class="post-center" 
+                                style="width: 100%;">
+                        </div>
+                    </div>
+                    <div>
+                        <router-link :to="{name: 'login'}" class="fonts fonts-11 red semibold">Back to Login</router-link>
                     </div>
                 </div>
 
                 <div class="padding padding-top-15px padding-bottom-15px">
                     <div class="field-group">
-                        <div class="field-label">Username</div>
+                        <div class="field-label">Full Name</div>
+                        <el-input 
+                            placeholder=""
+                            type="text"
+                            v-model="form.name"
+                            :disabled="loading"></el-input>
+                        <div 
+                            v-if="errorMessage.name" 
+                            class="field-error">
+                            {{ errorMessage.name && errorMessage.name[0] }}
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-label">Your Email</div>
+                        <el-input 
+                            placeholder=""
+                            type="email"
+                            v-model="form.email"
+                            :disabled="loading"
+                            @input="onChangeEmail"></el-input>
+                        <div 
+                            v-if="errorMessage.email" 
+                            class="field-error">
+                            {{ errorMessage.email && errorMessage.email[0] }}
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-label">Your Username</div>
                         <el-input 
                             placeholder=""
                             type="text"
@@ -34,12 +66,12 @@
                         <div 
                             v-if="errorMessage.username" 
                             class="field-error">
-                            {{ errorMessage.username }}
+                            {{ errorMessage.username && errorMessage.username[0] }}
                         </div>
                     </div>
 
                     <div class="field-group">
-                        <div class="field-label">Password</div>
+                        <div class="field-label">Create Password</div>
                         <el-input 
                             placeholder=""
                             type="password"
@@ -49,18 +81,16 @@
                         <div 
                             v-if="errorMessage.password" 
                             class="field-error">
-                            {{ errorMessage.password }}
+                            {{ errorMessage.password && errorMessage.password[0] }}
                         </div>
                     </div>
                 </div>
 
-                <button class="btn btn-full btn-main" :disabled="isButtonDisabled">Login</button>
-
-                <div class="fonts fonts-9 grey normal align-center margin margin-bottom-15px margin-top-15px">Or</div>
-
-                <div class="content-center">
-                    <router-link :to="{name: 'register'}" class="fonts fonts-11 red semibold align-center">Register</router-link>
-                </div>
+                <button 
+                    class="btn btn-full btn-main" 
+                    :disabled="isButtonDisabled">
+                    Register
+                </button>
             </form>
         </div>
     </div>
@@ -71,7 +101,7 @@ import { mapActions, mapState } from 'vuex'
 import logo from '@/assets/img/logo.png'
 
 export default {
-    name: "Login",
+    name: "Register",
     components: {},
 
     data () {
@@ -99,11 +129,17 @@ export default {
 
     methods: {
         ...mapActions({
-            login: 'storeAuth/login',
+            register: 'storeAuth/register',
         }),
 
+        onChangeEmail (data) {
+            const email = data.split('@')
+            console.log('email', email)
+            this.form.username = email[0]
+        },
+
         async submit () {
-            const res = await this.login(this.form)
+            const res = await this.register(this.form)
             if (res.data.status === 'ok') {
                 const data = res.data.data 
 

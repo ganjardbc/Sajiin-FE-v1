@@ -35,7 +35,7 @@
                             </button>
                         </div>
                         <div class="header-content-main-center">
-                            <router-link :to="{name: 'owner-home'}" class="width width-90px">
+                            <router-link :to="{name: 'shop-home'}" class="width width-90px">
                                 <img :src="logo" alt="" style="width: 100%;">
                             </router-link>
                         </div>
@@ -79,7 +79,7 @@ import SelectShopField from '../../modules/SelectShopField'
 const defaultSidebar = [
     {
         icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: true, menu: [
-            {icon: 'fa fa-lg fa-home', label: 'Back to Home', value: 0, link: 'owner-home', permission: 'dashboard'},
+            {icon: 'fa fa-lg fa-home', label: 'Back to Owner', value: 0, link: 'owner-home', permission: 'dashboard'},
         ]
     },
     {

@@ -6,7 +6,7 @@
                     :class="`card card-status ${selectedIndex === 'all' ? 'inactive' : 'normal'} no-padding border-big-radius`" 
                     style="margin: 0 0;"
                     @click="onSelected('all')">
-                    <div class="display-flex nowrap align-center" style="padding: 10px 15px 10px 10px;">
+                    <div class="display-flex nowrap align-center" style="padding: 5px 10px 5px 5px;">
                         <div class="width width-40px">
                             <div class="image image-30px image-circle bg-white border-full">
                                 <i class="post-middle-absolute icn fa fa-lw fa-utensils"></i>
@@ -23,7 +23,7 @@
                     :class="`card card-status ${selectedIndex === dt.id ? 'inactive' : 'normal'} no-padding border-big-radius`" 
                     style="margin: 0 0;"
                     @click="onSelected(dt.id)">
-                    <div class="display-flex nowrap align-center" style="padding: 10px 15px 10px 10px;">
+                    <div class="display-flex nowrap align-center" style="padding: 5px 10px 5px 5px;">
                         <div class="width width-40px">
                             <div class="image image-30px image-circle bg-white border-full">
                                 <img 

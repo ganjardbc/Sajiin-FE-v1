@@ -19,12 +19,6 @@
                         trigger="click">
                         <div class="width width-100">
                             <button 
-                                v-if="dt.shop.status === 'active'"
-                                class="btn btn-white btn-full btn-align-left"
-                                @click="onManage(dt.shop)">
-                                <i class="icn icn-left fa fa-lw fa-store"></i> Manage 
-                            </button>
-                            <button 
                                 class="btn btn-white btn-full btn-align-left"
                                 @click="onEdit(dt.shop)">
                                 <i class="icn icn-left fa fa-lw fa-edit"></i> Edit 
@@ -91,6 +85,12 @@
                             @change="onChangeStatus(dt.shop)"></el-switch>
                     </div>
                 </div>
+            </div>
+
+            <div v-if="dt.shop.status === 'active'" class="display-flex flex-end padding padding-top-15px">
+                <button class="btn btn-sekunder" @click="onManage(dt.shop)">
+                    <i class="icn icn-left fa fa-lw fa-store"></i> Manage Shop
+                </button>
             </div>
         </div>
     </div>

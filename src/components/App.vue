@@ -54,6 +54,9 @@ export default {
         connect: function () {
             this.$message('Connected to Socket')
         },
+        disconnect: function () {
+            this.$message('You are disconnected')
+        },
     }
 }
 </script>

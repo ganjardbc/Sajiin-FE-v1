@@ -27,7 +27,6 @@ const defaultOrderPaymentStatus = () => {
 
 const downloadList = () => {
     return [
-        {value: 'all', label: 'All'},
         {value: 'daily', label: 'Daily'},
         {value: 'weekly', label: 'Weekly'},
         {value: 'monthly', label: 'Monthly'},
@@ -52,10 +51,9 @@ export default {
         data: [],
         filter: {
             search: '',
-            status: '',
-            report_type: 'all',
-            order_status: 'all',
-            payment_status: 'all',
+            report_type: '',
+            order_status: '',
+            payment_status: '',
         }
     },
 
@@ -77,30 +75,22 @@ export default {
         SET_TOTAL_RECORD (state, value) {
             state.totalRecord = value
         },
-        SET_ORDER_BILLS (state, data) {
-            const bills_price = data ? parseInt(data) : 0
-            const total_price = parseInt(state.form.total_price)
-            const total = bills_price - total_price
-            const payload = {
-                ...state.form,
-                bills_price: bills_price,
-                change_price: total,
-                payment_status: total >= 0 ? 1 : 0
-            }
-            state.form = payload 
-        }
     },
 
     actions: {
         setPagination ({ commit, state }, data) {
             state.offset = (data - 1) * state.limit
         },
-        setOrderBills ({ commit, state }, data) {
-            commit('SET_ORDER_BILLS', data)
-        },
         resetFilter ({ commit, state }) {
             state.limit = 10
             state.offset = 0
+            state.data = []
+            state.filter = {
+                search: '',
+                report_type: '',
+                order_status: '',
+                payment_status: '',
+            }
         },
         getData ({ commit, state }, data) {
             commit('SET_LOADING', true)
@@ -112,8 +102,10 @@ export default {
                 limit: state.limit,
                 offset: state.offset,
                 search: state.filter.search,
-                status: state.filter.status,
-                payment_status: state.filter.payment_status,
+                status: state.filter.order_status !== 'all' 
+                    ? filter.order_status : '',
+                payment_status: state.filter.payment_status !== 'all' 
+                    ? state.filter.payment_status : '',
                 shop_id: data.shop_id
             }
 
