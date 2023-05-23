@@ -135,33 +135,17 @@ export default {
                 this.$cookies.set('permissions', JSON.stringify(data.permissions))
 
                 if (data.user.role_name === 'admin') {
-                    window.location = '/admin/home'
+                    this.$router.replace('/admin/home')
                 }
                 else if (data.user.role_name === 'owner') {
-                    window.location = '/owner/home'
+                    this.$router.replace('/owner/home')
                 }
                 else {
-                    window.location = '/employee/home'
+                    this.$router.replace('/employee/home')
                 }
             }
         }
     },
-
-    // beforeMount: function () {
-    //     if (this.$cookies.get('token')) 
-    //     {
-    //         const user = this.$cookies.get('user')
-    //         if (user.role_name === 'admin') {
-    //             window.location = '/admin/home'
-    //         }
-    //         else if (user.role_name === 'owner') {
-    //             window.location = '/owner/home'
-    //         }
-    //         else {
-    //             window.location = '/employee/home'
-    //         }
-    //     }
-    // }
 }
 
 </script>

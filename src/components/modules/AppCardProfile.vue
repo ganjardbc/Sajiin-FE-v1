@@ -103,8 +103,7 @@ export default {
                         this.$cookies.remove('thermalStatus')
                         this.$cookies.remove('thermalUrl')
 
-                        // this.$router.push({ name: 'login' })
-                        window.location = '/'
+                        this.$router.push({ name: 'login' })
                     }
                 })
                 .finally(() => {

@@ -118,8 +118,7 @@ Vue.prototype.shiftImageCoverUrl = api + '/contents/shifts/covers/'
 const router = new VueRouter({
     // mode: 'history',
     routes: routes,
-    // base: process.env.BASE_URL,
-    // base: '/',
+    base: process.env.BASE_URL,
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {
             return savedPosition
