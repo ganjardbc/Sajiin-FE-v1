@@ -27,7 +27,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import "./assets/sass/app.css"
 import "./assets/icons/fontawesome/css/all.min.css"
 import Vue from 'vue'
-import wb from './registerServiceWorker'
+// import wb from './registerServiceWorker'
 import VueCurrencyInput from 'vue-currency-input'
 
 const url = window.location.protocol+'//'+window.location.host
@@ -77,7 +77,7 @@ Vue.use(SmartTable)
 Vue.component('apexchart', VueApexCharts)
 
 Vue.$cookies.config('2d')
-Vue.prototype.$workbox = wb
+// Vue.prototype.$workbox = wb
 Vue.prototype.format = (data) => { return formatCurrency(data) }
 Vue.prototype.currency = (data) => { return fieldCurrency(data) }
 Vue.prototype.cashBookList = (data) => { return getCashbookList(data) }
