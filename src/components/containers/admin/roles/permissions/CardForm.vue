@@ -20,7 +20,7 @@
                         @click="onSelect(scope.row)"
                         class="btn btn-icon btn-sekunder"
                         :disabled="roleTypeForm === 'detail'">
-                        <i class="fa fa-lw fa-check"></i>
+                        <i class="fa fa-lw fa-plus"></i>
                     </button>
                 </template>
             </el-table-column>

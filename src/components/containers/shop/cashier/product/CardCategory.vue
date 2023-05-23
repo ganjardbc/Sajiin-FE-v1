@@ -1,9 +1,22 @@
 <template>
     <div id="App" class="display-flex space-between align-center wrap">
-        <AppCardScrollable :isScrollable="false" customHeight="auto">
-            <div style="margin: 5px; flex-grow: 1; display: inline-block;">
+        <div class="horizontal-scroll" style="overflow-x: auto;">
+            <!-- <div style="margin: 10px 5px 5px 0; flex-grow: 1; display: inline-block;">
                 <div 
-                    :class="`card card-status ${selectedIndex === 'all' ? 'inactive' : 'normal'} no-padding border-big-radius`" 
+                    :class="`card card-status normal no-padding border-big-radius`" 
+                    style="margin: 0 0;">
+                    <div class="display-flex nowrap align-center" style="padding: 5px;">
+                        <div class="width width-30px">
+                            <div class="image image-30px image-circle bg-white border-full">
+                                <i class="post-middle-absolute icn fa fa-lw fa-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <div style="margin: 10px 5px 5px 0; flex-grow: 1; display: inline-block;">
+                <div 
+                    :class="`card card-status ${selectedIndex === 'all' ? 'active' : 'normal'} no-padding border-big-radius`" 
                     style="margin: 0 0;"
                     @click="onSelected('all')">
                     <div class="display-flex nowrap align-center" style="padding: 5px 10px 5px 5px;">
@@ -18,9 +31,9 @@
                     </div>
                 </div>
             </div>
-            <div v-for="(dt, i) in data" :key="i" style="margin: 5px; flex-grow: 1; display: inline-block;">
+            <div v-for="(dt, i) in data" :key="i" style="margin: 10px 8px 5px 0; flex-grow: 1; display: inline-block;">
                 <div 
-                    :class="`card card-status ${selectedIndex === dt.id ? 'inactive' : 'normal'} no-padding border-big-radius`" 
+                    :class="`card card-status ${selectedIndex === dt.id ? 'active' : 'normal'} no-padding border-big-radius`" 
                     style="margin: 0 0;"
                     @click="onSelected(dt.id)">
                     <div class="display-flex nowrap align-center" style="padding: 5px 10px 5px 5px;">
@@ -40,11 +53,10 @@
                     </div>
                 </div>
             </div>
-        </AppCardScrollable>
+        </div>
     </div>
 </template>
 <script>
-import AppCardScrollable from '../../../../modules/AppCardScrollable'
 
 export default {
     name: 'App',
@@ -55,9 +67,6 @@ export default {
     },
     props: {
         data: null,
-    },
-    components: {
-        AppCardScrollable
     },
     methods: {
         onSelected (data) {

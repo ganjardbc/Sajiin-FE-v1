@@ -13,7 +13,7 @@
                         <div>
                             <div class="fonts fonts-11 semibold" style="margin-bottom: 3px;">{{ dt.title }}</div>
                             <div class="fonts fonts-10 grey">{{ dt.subtitle }}</div>
-                            <div class="fonts fonts-10 grey">{{ dt.created_at | moment("from", "now") }}</div>
+                            <div class="fonts fonts-10 grey">{{ dt.created_at | moment("DD MMMM YYYY") }}</div>
                         </div>
                     </div>
                     <div style="position: absolute; top: 15px; right: 10px;">

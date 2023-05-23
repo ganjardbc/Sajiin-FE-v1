@@ -96,7 +96,7 @@
             <div class="field-group">
                 <div class="field-label">Status</div>
                 <div class="display-flex space-between">
-                    <div class="fonts micro black">Is this product still active ?</div>
+                    <div class="fonts micro black">Is this product {{ form.status === 'active' ? 'Inactive' : 'Active' }} ?</div>
                     <el-switch 
                         v-model="form.status"
                         :disabled="isDetailForm"
@@ -107,22 +107,6 @@
                     v-if="errorMessage.status" 
                     class="field-error">
                     {{ errorMessage.status && errorMessage.status[0] }}
-                </div>
-            </div>
-            <div class="field-group">
-                <div class="field-label">Available</div>
-                <div class="display-flex space-between">
-                    <div class="fonts micro black">Is this product still available ?</div>
-                    <el-switch 
-                        v-model="form.is_available"
-                        :disabled="isDetailForm"
-                        :active-value="1"
-                        :inactive-value="0"></el-switch>
-                </div>
-                <div 
-                    v-if="errorMessage.is_available" 
-                    class="field-error">
-                    {{ errorMessage.is_available && errorMessage.is_available[0] }}
                 </div>
             </div>
         </div>

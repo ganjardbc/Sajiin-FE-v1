@@ -44,7 +44,7 @@
             position: relative;
             text-decoration: none;
             display: block;
-            padding: 10px 0;
+            padding: 6px 0;
             &:hover {
                 color: $main-color;
             }
@@ -94,7 +94,7 @@
                 }
                 .ml-label {
                     width: calc(100% - 75px);
-                    font-size: 14px;
+                    font-size: 13px;
                 }
                 .val-container {
                     width: 30px; 
@@ -371,40 +371,87 @@
     .tabs-content {
         position: relative;
         width: 100%;
-        height: 40px;
         white-space: nowrap;
         overflow-y: hidden;
-        overflow-x: hidden;
+        overflow-x: auto;
         li {
             position: relative;
             list-style: none;
             display: inline-block;
             height: 30px;
-            padding: 8px 10px 0 10px;
+            padding: 8px 20px 0 20px;
             background-color: #fff;
             cursor: pointer;
-            &.active {
-                border-bottom: 2px $main-color solid;
-                .tabs-label {
-                    color: $main-color;
-                }
-            }
             .tabs-label {
                 font-weight: bold;
                 font-size: 13px;
                 color: $grey;
             }
+            &.active {
+                height: 28px;
+                border-bottom: 2px $main-color solid;
+                .tabs-label {
+                    color: $main-color;
+                }
+            }
         }
         &.full {
             display: flex;
-            flex-wrap: wrap;
-            white-space: normal;
+            flex-wrap: nowrap;
+            white-space: nowrap;
             overflow-y: hidden;
-            overflow-x: hidden;
+            overflow-x: auto;
             li {
                 flex-grow: 1;
                 display: block;
                 text-align: center;
+            }
+        }
+    }
+    &.theme-1 {
+        .tabs-button {
+            background-color: $white-grey;
+        }
+        .tabs-content {
+            border-radius: 4px;
+            li {
+                line-height: 40px;
+                height: 40px;
+                padding: 0 20px 0 20px;
+                background-color: $white-grey;
+                border-bottom: 0;
+                cursor: pointer;
+                &.active {
+                    height: 40px;
+                    border-bottom: 0;
+                    background-color: $main-color;
+                    border-radius: 4px;
+                    .tabs-label {
+                        color: $white;
+                    }
+                }
+            }
+        }
+    }
+    &.theme-2 {
+        .tabs-content {
+            border-radius: 4px;
+            li {
+                line-height: 40px;
+                height: 40px;
+                padding: 0 20px 0 20px;
+                background-color: $white;
+                border: 2px $white solid;
+                cursor: pointer;
+                &.active {
+                    height: 38px;
+                    border: 2px $main-color solid;
+                    background-color: $white;
+                    border-radius: 40px;
+                    .tabs-label {
+                        color: $main-color;
+                    }
+                }
             }
         }
     }

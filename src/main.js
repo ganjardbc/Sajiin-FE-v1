@@ -1,5 +1,5 @@
 window.Vue = require('vue')
- 
+
 import App from './components/App.vue'
 import VueRouter from 'vue-router'
 import VueAxios from 'vue-axios'
@@ -8,34 +8,58 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import {routes} from './router'
 import store from './store'
-import {formatCurrency} from './services/utils'
+import {formatCurrency, fieldCurrency, getCashbookList} from './services/utils'
 import SmartTable from 'vuejs-smart-table'
 import jquery from 'jquery'
-import VueSocketIO from 'vue-socket.io'
-import SocketIo from 'socket.io-client'
+// import VueSocketIO from 'vue-socket.io'
+// import SocketIo from 'socket.io-client'
 import VueQrcodeReader from "vue-qrcode-reader"
 import VueApexCharts from 'vue-apexcharts'
 import VueCarousel from 'vue-carousel'
 import VueSession from 'vue-session'
+import VueHtml2pdf from 'vue-html2pdf'
+import VueGtag from "vue-gtag"
+import Print from 'vue-print-nb'
+import VueMeta from 'vue-meta'
 import ElementUI from 'element-ui'
+import locale from 'element-ui/lib/locale/lang/en'
 import 'element-ui/lib/theme-chalk/index.css'
 import "./assets/sass/app.css"
 import "./assets/icons/fontawesome/css/all.min.css"
 import Vue from 'vue'
+import wb from './registerServiceWorker'
+import VueCurrencyInput from 'vue-currency-input'
 
 const url = window.location.protocol+'//'+window.location.host
-const socket = "https://sajiin-socket-v1.herokuapp.com"
-// const api = "http://localhost:8000" 
+const socket = "http://174.138.18.90:8082"
+// const socket = "http://localhost:8082/"
+const printer = "http://localhost:9999"
+// const api = "http://localhost:8000"
 const api = "https://internal.sajiin-app-v1.my.id/"
 const deploy = "https://github.com/ganjardbc/Sajiin-FE-v1/"
+const pluginOptions = {
+    globalOptions: { 
+        currency: 'IDR',
+        locale: 'id'
+    }
+}
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = api
 
 window.$ = jquery
 
-Vue.use(ElementUI)
+Vue.use(VueCurrencyInput, pluginOptions)
+Vue.use(Print)
+Vue.use(ElementUI, { locale })
 Vue.use(VueSession)
+Vue.use(VueHtml2pdf)
+Vue.use(VueGtag, {
+    config: { id: "G-DNMW2CDZWP" }
+})
+Vue.use(VueMeta, {
+    refreshOnceOnNavigation: true
+})
 Vue.use(VueCarousel)
 Vue.use(VueApexCharts)
 Vue.use(require('vue-moment'))
@@ -45,19 +69,23 @@ Vue.use(VueRouter)
 Vue.use(VueAxios, axios)
 Vue.use(VueCookies)
 Vue.use(SmartTable)
-Vue.use(new VueSocketIO({
-    debug: true,
-    connection: SocketIo(socket)
-}))
+// Vue.use(new VueSocketIO({
+//     debug: true,
+//     connection: SocketIo(socket)
+// }))
 
 Vue.component('apexchart', VueApexCharts)
 
-// Vue.$session.config('10d')
+Vue.$cookies.config('2d')
+Vue.prototype.$workbox = wb
 Vue.prototype.format = (data) => { return formatCurrency(data) }
+Vue.prototype.currency = (data) => { return fieldCurrency(data) }
+Vue.prototype.cashBookList = (data) => { return getCashbookList(data) }
 Vue.prototype.deployUrl = deploy
 Vue.prototype.apiUrl = api
 Vue.prototype.initUrl = url
 Vue.prototype.socketUrl = socket
+Vue.prototype.printerUrl = printer
 Vue.prototype.adminImageThumbnailUrl = api + '/contents/users/thumbnails/'
 Vue.prototype.adminImageCoverUrl = api + '/contents/users/covers/'
 Vue.prototype.benefitImageThumbnailUrl = api + '/contents/benefits/thumbnails/'
@@ -88,9 +116,10 @@ Vue.prototype.shiftImageThumbnailUrl = api + '/contents/shifts/thumbnails/'
 Vue.prototype.shiftImageCoverUrl = api + '/contents/shifts/covers/'
 
 const router = new VueRouter({
-    // mode: 'history',
+    mode: 'history',
     routes: routes,
-    base: process.env.BASE_URL,
+    // base: process.env.BASE_URL,
+    base: '/',
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {
             return savedPosition
@@ -99,7 +128,7 @@ const router = new VueRouter({
         }
     }
 })
- 
+
 new Vue({
     el: '#app',
     router: router,

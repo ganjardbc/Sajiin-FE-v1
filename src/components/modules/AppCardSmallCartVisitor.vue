@@ -1,5 +1,5 @@
 <template>
-    <div id="App" style="position: fixed; bottom: 10px; right: 0; width: 100%; display: flex; justify-content: center; z-index: 10000;">
+    <div id="App" style="position: fixed; bottom: 10px; right: 0; width: 100%; display: flex; justify-content: center; z-index: 1000;">
         <router-link :to="{name: 'visitor-cart'}">
             <button class="btn btn-main btn-radius-rounded box-shadow" style="display: flex; align-items: center; padding-top: 15px; padding-bottom: 15px;">
                 <div class="fonts fonts-11 white semibold" style="line-height: 0;">Carts ({{ cartList && cartList.length ? cartList.length : 0 }})</div>
@@ -32,7 +32,7 @@ export default {
             // cartList: 'cart/cartList'
         }),
         cartList() {
-            return this.$session.get('cartList')
+            return this.$cookies.get('cartList')
         }
     },
     methods: {

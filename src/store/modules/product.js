@@ -8,10 +8,27 @@ const defaultForm = () => {
         name: '',
         description: '',
         note: '',
+        price: 0,
         is_pinned: 0,
         is_available: 0,
         status: '',
-        category_id: ''
+        category_id: '',
+        details: []
+    }
+}
+
+const defaultFormDetail = () => {
+    return {
+        id: '',
+        proddetail_id: '',
+        name: '',
+        description: '',
+        price: 0,
+        is_available: 0,
+        is_discount: 0,
+        value_discount: '',
+        status: '',
+        product_id: ''
     }
 }
 
@@ -21,6 +38,8 @@ export default {
     state: {
         form: defaultForm(),
         errorMessage: defaultForm(),
+        formDetail: defaultFormDetail(),
+        errorMessageDetail: defaultFormDetail(),
         limit: 10,
         offset: 0,
         totalRecord: 0,
@@ -28,10 +47,11 @@ export default {
         loadMore: false,
         loadingForm: false,
         typeForm: 'create',
+        typeFormDetail: 'create',
         data: [],
         filter: {
             search: '',
-            status: '',
+            status: 'active',
         },
         category: {
             limit: 10,
@@ -100,9 +120,54 @@ export default {
         SET_CATEGORY_DATA (state, value) {
             state.category.data = value
         },
+
+        // DETAIL
+        SET_MESSAGE_DETAIL (state, value) {
+            if (value) {
+                state.errorMessageDetail = value 
+            } else {
+                state.errorMessageDetail = defaultFormDetail() 
+            }
+        },
+        SET_FORM_DETAIL (state, value) {
+            if (value) {
+                state.formDetail = value
+            } else {
+                const time = new Date().getTime()
+                state.formDetail = {
+                    ...defaultFormDetail(),
+                    proddetail_id: `PD-${time}`,
+                    status: 'active',
+                    is_available: 1
+                }
+            }
+        },
+        SET_CREATE_FORM_DETAIL (state, value) {
+            state.form.details.push({ ...value })
+        },
+        SET_EDIT_FORM_DETAIL (state, value) {
+            let payload = state.form.details.map((item) => {
+                if (item.id === value.id) {
+                    return { ...value }
+                } else {
+                    return { ...item }
+                }
+            })
+            state.form.details = payload
+        },
+        SET_DELETE_FORM_DETAIL (state, value) {
+            let payload = []
+            state.form.details.map((item) => {
+                if (item.id !== value.id) {
+                    payload.push({ ...item })
+                }
+            })
+            state.form.details = payload
+        }
     },
 
     actions: {
+        // DATA
         setPagination ({ commit, state }, data) {
             state.offset = (data - 1) * state.limit
         },
@@ -120,6 +185,26 @@ export default {
             state.limit = 10
             state.offset = 0
         },
+
+        // DETAIL
+        setFormDetail ({ commit, state }, data) {
+            commit('SET_FORM_DETAIL', data)
+        },
+        resetFormDetail ({ commit, state }) {
+            commit('SET_FORM_DETAIL', null)
+            commit('SET_MESSAGE_DETAIL', null)
+        },
+        createFormDetail ({ commit, state }, data) {
+            commit('SET_CREATE_FORM_DETAIL', data)
+        },
+        editFormDetail ({ commit, state }, data) {
+            commit('SET_EDIT_FORM_DETAIL', data)
+        },
+        deleteFormDetail ({ commit, state }, data) {
+            commit('SET_DELETE_FORM_DETAIL', data)
+        },
+
+        // LIST
         getData ({ commit, state }, data) {
             commit('SET_LOADING', true)
             commit('SET_LOAD_MORE', false)
@@ -259,12 +344,25 @@ export default {
 
             let dataPrev = []
 
-            const params = {
+            let params = {
                 limit: state.category.limit,
                 offset: state.category.offset,
                 search: state.category.filter.search,
                 status: state.category.filter.status,
+                shop_id: data.shop_id,
             }
+
+            // if (data.type === 'owner') {
+            //     params = {
+            //         ...params,
+            //         user_id: data.user_id
+            //     }
+            // } else {
+            //     params = {
+            //         ...params,
+            //         shop_id: data.shop_id
+            //     }
+            // }
 
             return axios.post('/api/category/getAll', params, { 
                     headers: { Authorization: data.token } 

@@ -53,7 +53,7 @@
                 <div class="field-group">
                     <div class="field-label">Status</div>
                     <div class="display-flex space-between">
-                        <div class="fonts micro black">Is this permission still active ?</div>
+                        <div class="fonts micro black">Is this permission {{ form.status === 'active' ? 'Inactive' : 'Active' }} ?</div>
                         <el-switch 
                             v-model="form.status"
                             :disabled="isDetailForm"

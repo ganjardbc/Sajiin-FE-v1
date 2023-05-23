@@ -4,7 +4,7 @@
             <div class="card bg-white box-shadow">
                 <div class="display-flex margin margin-bottom-10px">
                     <div style="width: 60px; margin-right: 10px;">
-                        <div class="image image-padding">
+                        <div class="image image-padding border-full">
                             <img 
                                 v-if="dt.product_image"
                                 :src="productImageThumbnailUrl + dt.product_image" 
@@ -33,12 +33,18 @@
                         <i class="far fa-lw fa-trash-alt"></i>
                     </button>
 
-                    <AddQtyField 
+                    <el-input-number 
+                        v-model="dt.quantity"
+                        @change="(data) => onTotal(data, index)" 
+                        :min="1"
+                        style="width: 120px;"></el-input-number>
+
+                    <!-- <AddQtyField 
                         :maximumValue="'10'" 
                         :value="dt.quantity" 
                         :id="index" 
                         :onChange="(data) => onTotal(data, index)"
-                        style="width: 120px;" />
+                        style="width: 120px;" /> -->
                 </div>
             </div>
         </div>

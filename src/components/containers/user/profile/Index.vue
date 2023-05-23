@@ -87,27 +87,11 @@
                                     placeholder=""
                                     type="text"
                                     v-model="form.username"
-                                    :disabled="true"></el-input>
+                                    :disabled="false"></el-input>
                                 <div 
                                     v-if="errorMessage.username" 
                                     class="field-error">
                                     {{ errorMessage.username && errorMessage.username[0] }}
-                                </div>
-                            </div>
-                            <div class="field-group">
-                                <div class="field-label">Available</div>
-                                <div class="display-flex space-between">
-                                    <div class="fonts micro black">Is this user still available ?</div>
-                                    <el-switch 
-                                        v-model="form.is_available"
-                                        :disabled="false"
-                                        :active-value="1"
-                                        :inactive-value="0"></el-switch>
-                                </div>
-                                <div 
-                                    v-if="errorMessage.is_available" 
-                                    class="field-error">
-                                    {{ errorMessage.is_available && errorMessage.is_available[0] }}
                                 </div>
                             </div>
                         </div>
@@ -217,6 +201,14 @@ const tabs = [
 
 export default {
     name: 'App',
+    metaInfo: {
+        title: 'User',
+        titleTemplate: '%s | Profile',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
     data () {
         return {
             tabs: tabs,
@@ -262,12 +254,12 @@ export default {
             this.selectedIndex = data 
         },
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.getUser(token)
                 .then((res) => {
                     const data = res.data.data
                     this.setDataAuth(data)
-                    this.$session.set('user', data.user)
+                    this.$cookies.set('user', data.user)
                 })
         },
 
@@ -285,7 +277,7 @@ export default {
         },
         onClickYesUpdate () {
             this.visibleConfirmedUpdate = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.updateData({
                 ...this.form,
                 token
@@ -293,9 +285,12 @@ export default {
                 const status = res.data.status 
                 if (status === 'ok') {
                     this.getData()
+                    this.$message('Success edit profile')
                 } else {
-                    this.visibleAlert = true 
-                    this.titleAlert = 'Failed to update data'
+                    this.$message({
+                        message: 'Failed to edit profile',
+                        type: 'error'
+                    })
                 }
             })
         },
@@ -309,16 +304,16 @@ export default {
         },
         onClickYesLogout () {
             this.visibleConfirmedLogout = false
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.logout(token).then((res) => {
                 if (res.data.status === 'ok') {
-                    this.$session.remove('token')
-                    this.$session.remove('tokenBearer')
-                    this.$session.remove('user')
-                    this.$session.remove('role')
-                    this.$session.remove('shop')
-                    this.$session.remove('employee')
-                    this.$session.remove('permissions')
+                    this.$cookies.remove('token')
+                    this.$cookies.remove('tokenBearer')
+                    this.$cookies.remove('user')
+                    this.$cookies.remove('role')
+                    this.$cookies.remove('shop')
+                    this.$cookies.remove('employee')
+                    this.$cookies.remove('permissions')
 
                     this.$router.push({ name: 'login' })
                 }
@@ -334,7 +329,7 @@ export default {
         },
         onUpdateCover (data) {
             this.visibleUpdateCover = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.uploadCover({
                 ...this.form,
                 image: data,

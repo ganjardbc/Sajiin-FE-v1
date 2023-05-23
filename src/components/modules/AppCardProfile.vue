@@ -2,12 +2,12 @@
     <div id="App">
         <el-popover
             placement="bottom-end"
-            width="180"
+            width="250"
             trigger="click">
             <div class="width width-100 content-center">
                 <div class="padding margin margin-bottom-15px padding padding-bottom-15px border-bottom">
                     <div 
-                        class="image image-80px image-center image-circle" 
+                        class="image image-80px image-center image-circle border-full" 
                         style="text-align: center; margin-bottom: 15px;">
                         <img 
                             v-if="data && data.image" 
@@ -19,7 +19,7 @@
                             style="color: #999;" />
                     </div>
                     <div class="fonts fonts-11 align-center semibold black">{{ data && data.name }}</div>
-                    <div class="fonts fonts-9 align-center grey">@{{ data && data.username }}</div>
+                    <div class="fonts fonts-9 align-center grey" style="text-transform: uppercase;">{{ data && data.role_name }}</div>
                 </div>
                 <button class="btn btn-full btn-sekunder" @click="onLogout">
                     <i class="icn icn-left fa fa-lw fa-power-off"></i> Logout
@@ -47,21 +47,28 @@
             @onClickNo="onClickNoLogout"
             @onClickYes="onClickYesLogout"
         />
+
+        <AppPopupLoader 
+            v-if="visiblePopupLoader"
+        />
     </div>
 </template>
 <script>
 import { mapActions } from 'vuex'
 import AppPopupConfirmed from './AppPopupConfirmed'
+import AppPopupLoader from './AppPopupLoader'
 
 export default {
     name: 'App',
     data () {
         return {
-            visibleConfirmedLogout: false 
+            visibleConfirmedLogout: false,
+            visiblePopupLoader: false,
         }
     },
     components: {
-        AppPopupConfirmed
+        AppPopupConfirmed,
+        AppPopupLoader
     },
     props: {
         data: null,
@@ -80,21 +87,29 @@ export default {
             this.visibleConfirmedLogout = false
         },
         onClickYesLogout () {
+            this.visiblePopupLoader = true
             this.visibleConfirmedLogout = false
-            const token = this.$session.get('tokenBearer')
-            this.logout(token).then((res) => {
-                if (res.data.status === 'ok') {
-                    this.$session.remove('token')
-                    this.$session.remove('tokenBearer')
-                    this.$session.remove('user')
-                    this.$session.remove('role')
-                    this.$session.remove('shop')
-                    this.$session.remove('employee')
-                    this.$session.remove('permissions')
+            const token = this.$cookies.get('tokenBearer')
+            this.logout(token)
+                .then((res) => {
+                    if (res.data.status === 'ok') {
+                        this.$cookies.remove('token')
+                        this.$cookies.remove('tokenBearer')
+                        this.$cookies.remove('user')
+                        this.$cookies.remove('role')
+                        this.$cookies.remove('shop')
+                        this.$cookies.remove('employee')
+                        this.$cookies.remove('permissions')
+                        this.$cookies.remove('thermalStatus')
+                        this.$cookies.remove('thermalUrl')
 
-                    this.$router.push({ name: 'login' })
-                }
-            })
+                        // this.$router.push({ name: 'login' })
+                        window.location = '/'
+                    }
+                })
+                .finally(() => {
+                    this.visiblePopupLoader = false 
+                })
         },
     }
 }

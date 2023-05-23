@@ -9,6 +9,7 @@
                 v-if="!isCreateForm"
                 :selectedIndex.sync="selectedIndex" 
                 :data="tabs" 
+                :isFull="true"
                 :onChange="(data) => onChangeTabs(data)"
                 class="margin margin-bottom-20px" />
             <FormData v-if="selectedIndex === 0" />
@@ -22,7 +23,7 @@ import { mapState, mapActions } from 'vuex'
 import AppSideForm from '../../../modules/AppSideForm'
 import AppTabs from '../../../modules/AppTabs'
 import FormData from './FormData'
-import Permissions from './permissions'
+import Permissions from './permissions/Index'
 
 const tabs = [
     {id: 1, label: 'Data', status: 'active'},

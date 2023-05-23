@@ -71,7 +71,7 @@ export default {
             setPaginationPermission: 'storeRolePermissions/setPaginationPermission'
         }),
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.getDataPermission({ token })
         },
         handleCurrentChange (value) {

@@ -15,10 +15,10 @@ a {
     cursor: pointer;
     font-size: 13px;
     font-weight: bold;
-    letter-spacing: 2;
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
+    align-items: center;
     border-radius: 4px;
     &:disabled {
         background-color: $white-grey !important;
@@ -79,7 +79,11 @@ a {
         }
         &.with-hover {
             &:hover {
+                border: 1px #f5f5f5 solid;
                 background-color: #f5f5f5;
+                &.with-border {
+                    border: 1px $main-color solid;
+                }
             }
         }
     }
@@ -96,11 +100,32 @@ a {
         color: $black;
         border: 1px #fff solid;
     }
+    &.btn-button-link {
+        background-color: #fff;
+        color: $grey;
+        height: 56px;
+        padding: 0 15px;
+        border-bottom: 4px #fff solid;
+        border-radius: 0;
+        margin: 0;
+        &:hover {
+            background-color: $white-grey;
+            border-color: $white-grey;
+        }
+        &.router-link-active {
+            // background-color: $main-color;
+            // color: #fff;
+            background-color: #fff;
+            color: $main-color;
+            border-color: $main-color;
+        }
+    }
     &.btn-sekunder {
         background-color: #fff;
         color: $black;
         border: 1px $tiny-grey solid;
         &:hover {
+            background-color: $white-grey;
             border: 1px #555 solid;
         }
     }
@@ -200,10 +225,7 @@ a {
     }
     &.btn-small {
         height: 30px;
-        padding: 8px 10px;
-        .icn {
-            margin-top: 0;
-        }
+        padding: 0 10px;
     }
     &.btn-radius {
         border-radius: 4px;

@@ -1,7 +1,7 @@
 <template>
     <div id="App">
         <div :class="`card-capsule ${getColor()}`">
-            {{ data.replace(/-/g, ' ') }}
+            {{ label ? label : data.replace(/-/g, ' ') }}
         </div>
     </div>
 </template>
@@ -9,7 +9,8 @@
 export default {
     name: 'App',
     props: {
-        data: null 
+        data: null,
+        label: null,
     },
     methods: {
         getColor () {
@@ -52,6 +53,12 @@ export default {
                     color = 'active'
                     break
                 case 'unpaid':
+                    color = 'inactive'
+                    break
+                case 'open':
+                    color = 'active'
+                    break
+                case 'closed':
                     color = 'inactive'
                     break
             }

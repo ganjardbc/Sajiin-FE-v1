@@ -171,7 +171,7 @@
                     <div class="field-label">Phone</div>
                     <el-input 
                         placeholder=""
-                        type="text"
+                        type="number"
                         v-model="form.phone"
                         :disabled="isDetailForm"></el-input>
                     <div 
@@ -187,7 +187,7 @@
                 <div class="field-group">
                     <div class="field-label">Status</div>
                     <div class="display-flex space-between">
-                        <div class="fonts micro black">Is this shop still active ?</div>
+                        <div class="fonts micro black">Is this shop {{ form.status === 'active' ? 'Inactive' : 'Active' }} ?</div>
                         <el-switch 
                             v-model="form.status"
                             :disabled="isDetailForm"
@@ -201,20 +201,39 @@
                     </div>
                 </div>
                 <div class="field-group">
-                    <div class="field-label">Available</div>
+                    <div class="field-label">Digital Menu</div>
                     <div class="display-flex space-between">
-                        <div class="fonts micro black">Is this shop still available ?</div>
+                        <div class="fonts micro black">Activated digital menu ?</div>
                         <el-switch 
-                            v-model="form.is_available"
+                            v-model="form.is_digital_menu_active"
                             :disabled="isDetailForm"
                             :active-value="1"
-                            :inactive-value="0"></el-switch>
+                            :inactive-value="0"
+                            @change="onChangeDigitalMenu"></el-switch>
                     </div>
                     <div 
-                        v-if="errorMessage.is_available" 
+                        v-if="errorMessage.is_digital_menu_active" 
                         class="field-error">
-                        {{ errorMessage.is_available && errorMessage.is_available[0] }}
+                        {{ errorMessage.is_digital_menu_active && errorMessage.is_digital_menu_active[0] }}
                     </div>
+
+                    <div class="display-flex space-between margin margin-top-10px">
+                        <div class="fonts micro black">Activated digital order ?</div>
+                        <el-switch 
+                            v-model="form.is_digital_order_active"
+                            :disabled="isDetailForm"
+                            :active-value="1"
+                            :inactive-value="0"
+                            @change="onChangeDigitalOrder"></el-switch>
+                    </div>
+                    <div 
+                        v-if="errorMessage.is_digital_order_active" 
+                        class="field-error">
+                        {{ errorMessage.is_digital_order_active && errorMessage.is_digital_order_active[0] }}
+                    </div>
+                </div>
+                <div v-if="form.is_digital_menu_active" class="field-group">
+                    <AppShopLink :link="`${initUrl}/visitor/${form.shop_id}`" />
                 </div>
             </div>
         </AppSideForm>
@@ -225,6 +244,7 @@
 import { mapState } from 'vuex'
 import AppSideForm from '../../../modules/AppSideForm'
 import AppImage from '../../../modules/AppImage'
+import AppShopLink from '../../../modules/AppShopLink'
 
 export default {
     name: 'App',
@@ -268,8 +288,17 @@ export default {
     components: {
         AppSideForm,
         AppImage,
+        AppShopLink,
     },
     methods: {
+        onChangeDigitalMenu (data) {
+            this.form.is_digital_menu_active = data
+            this.form.is_digital_order_active = 0
+        },
+        onChangeDigitalOrder (data) {
+            this.form.is_digital_order_active = data
+            this.form.is_digital_menu_active = 1
+        },
         uploadImage (data) {
             this.$emit('uploadImage', data)
         },

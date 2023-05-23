@@ -2,12 +2,13 @@
     <div id="AppSideForm" :class="isZoomed ? 'form-side zoomed' : 'form-side'">
         <div class="fs-header display-flex space-between align-center">
             <div class="width width-50" style="margin-left: 10px;">
-                <div class="fonts normal semibold">{{ title }}</div>
+                <div class="fonts fonts-11 semibold">{{ title }}</div>
+                <div v-if="subtitle" class="fonts fonts-9 normal">{{ subtitle }}</div>
             </div>
             <div class="width width-50 display-flex flex-end align-center">
                 <slot name="toolbar" />
                 <button class="btn btn-icon btn-white" @click="onClose" title="Close">
-                    <i class="fa fa-lw fa-arrow-right" />
+                    <i class="fa fa-lg fa-times" />
                 </button>
             </div>
         </div>
@@ -43,6 +44,10 @@ export default {
         title: {
             type: String,
             required: true
+        },
+        subtitle: {
+            type: String,
+            required: false
         },
         enableSaveButton: {
             type: Boolean,

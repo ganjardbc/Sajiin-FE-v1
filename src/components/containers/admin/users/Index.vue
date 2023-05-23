@@ -106,6 +106,14 @@ import Card from './Card'
 
 export default {
     name: 'App',
+    metaInfo: {
+        title: 'Admin',
+        titleTemplate: '%s | Users',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
     data () {
         return {
             formClass: false,
@@ -121,6 +129,7 @@ export default {
     },
     mounted () {
         this.getDataRole()
+        this.getDataEmployee()
         this.getData()
     },
     components: {
@@ -157,6 +166,7 @@ export default {
         ...mapActions({
             getUsers: 'storeUsers/getData',
             getRole: 'storeUsers/getDataRole',
+            getEmployee: 'storeUsers/getDataEmployee',
             setPagination: 'storeUsers/setPagination',
             resetFormData: 'storeUsers/resetFormData',
             resetFilter: 'storeUsers/resetFilter',
@@ -180,7 +190,7 @@ export default {
 
         // LIST DATA
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.getUsers({ token })
         },
         handleCurrentChange (value) {
@@ -192,8 +202,12 @@ export default {
             this.handleCurrentChange(1)
         },
         getDataRole () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.getRole({ token })
+        },
+        getDataEmployee () {
+            const token = this.$cookies.get('tokenBearer')
+            this.getEmployee({ token })
         },
 
         // ALERT
@@ -207,7 +221,7 @@ export default {
         },
         onClickYes () {
             this.visibleConfirmed = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             switch (this.typeForm) {
                 case 'create':
                     this.createData({
@@ -219,8 +233,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to save this user'
+                            this.$message({
+                                message: 'Failed to save this user',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -234,8 +250,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to edit this user'
+                            this.$message({
+                                message: 'Failed to edit this user',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -288,7 +306,7 @@ export default {
         },
         onClickYesDelete () {
             this.visibleConfirmedDelete = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.deleteData({
                 ...this.form,
                 token: token
@@ -316,7 +334,7 @@ export default {
         },
         onUpdateCover (data) {
             this.visibleUpdateCover = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.uploadCover({
                 ...this.form,
                 image: data,

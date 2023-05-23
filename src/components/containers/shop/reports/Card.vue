@@ -5,41 +5,35 @@
 				type="index" 
 				label="No" 
 				width="50" 
+				align="center"
 				:index="indexMethod"></el-table-column>
-			<el-table-column label="Order ID" width="180">
+			<el-table-column label="Order ID" min-width="200">
 				<template slot-scope="scope">
-					<div style="font-weight: bold;">{{ scope.row.order.order_id }}</div>
-					<div style="font-size: 13px;">{{ scope.row.order.created_at | moment("DD MMM YYYY") }}</div>
+					<div><AppCardCapsule :data="scope.row.order.status" :label="scope.row.order.order_id" /></div>
 				</template>
 			</el-table-column>
-			<el-table-column label="Total Item">
+			<el-table-column label="Order Date" min-width="150">
 				<template slot-scope="scope">
-					<div>{{ scope.row.order.total_item }} products</div>
+					<div>{{ scope.row.order.created_at | moment("DD MMM YYYY") }}</div>
 				</template>
 			</el-table-column>
-			<el-table-column label="Total Price">
+			<el-table-column label="Order Item" min-width="350">
 				<template slot-scope="scope">
-					<div>{{ format(scope.row.order.total_price) }}</div>
+					<div 
+						v-for="(dt, i) in scope.row.details" 
+						:key="i" 
+						class="width width-100 padding padding-bottom-5px padding-top-5px">
+						<div>{{ dt.product_name }}</div>
+						<div class="display-flex space-between">
+							<div> {{ dt.quantity }} x {{ dt.product_detail }}</div>
+							<div style="font-weight: bold;">{{ format(dt.price) }}</div>
+						</div>
+					</div>
 				</template>
 			</el-table-column>
-			<el-table-column label="Bills">
+			<el-table-column label="Total" align="right" min-width="200">
 				<template slot-scope="scope">
-					<div>{{ format(scope.row.order.bills_price) }}</div>
-				</template>
-			</el-table-column>
-			<el-table-column label="Change">
-				<template slot-scope="scope">
-					<div>{{ format(scope.row.order.change_price) }}</div>
-				</template>
-			</el-table-column>
-			<el-table-column label="Payment Status" width="130">
-				<template slot-scope="scope">
-					<AppCardCapsule :data="scope.row.order.payment_status ? 'paid' : 'unpaid'" />
-				</template>
-			</el-table-column>
-			<el-table-column label="Order Status" width="130">
-				<template slot-scope="scope">
-					<AppCardCapsule :data="scope.row.order.status" />
+					<div style="font-weight: bold;">{{ format(scope.row.order.total_price) }}</div>
 				</template>
 			</el-table-column>
 		</el-table>

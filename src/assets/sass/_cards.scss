@@ -1,7 +1,7 @@
 .card {
     position: relative;
-    width: calc(100% - 40px);
-    padding: 20px;
+    width: calc(100% - 30px);
+    padding: 15px;
     border-radius: 8px;
     overflow: hidden;
     &.selected {
@@ -134,9 +134,13 @@
         &:hover {
             cursor: pointer
         }
+        &.main-color {
+            background-color: $main-color;
+            border: 0.1px $main-color solid;
+        }
         &.normal {
             background-color: $white;
-            border: 0.1px $white-grey solid;
+            border: 0.1px $border-grey solid;
         }
         &.active {
             background-color: rgba($color: $teal, $alpha: 0.1);
@@ -227,9 +231,8 @@
             width: 100%;
             height: 100%;
             .card-popup-body {
-                padding-bottom: 0;
-                height: calc(100vh - 50px);
-                max-height: calc(100vh - 50px);
+                height: calc(100% - 65px);
+                max-height: calc(100% - 65px);
             }
         }
     }
@@ -461,7 +464,7 @@
 .card-toast {
     position: fixed;
     z-index: 10000;
-    top: 80px;
+    top: 20px;
     left: 50%;
 	-webkit-transform: translate(-50%, 0);
 	   -moz-transform: translate(-50%, 0);
@@ -474,7 +477,7 @@
         transition: 0.5s;
     }
     &.show {
-        top: 80px;
+        top: 20px;
         transition: 0.5s;
     }
     .card-toast-content {
@@ -801,6 +804,24 @@
         font-size: 12px;
         font-weight: 600;
         color: #fff;
+    }
+    &.center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    &.small {
+        width: 25px;
+        height: 25px;
+    }
+    &.medium {
+        width: 30px;
+        height: 30px;
+    }
+    &.big {
+        width: 40px;
+        height: 40px;
     }
 }
 

@@ -2,7 +2,7 @@
     <div id="AppCardDashboard" class="card-dashboard-container">
         <div 
             class="card box-shadow bg-white" 
-            :style="'padding: 0; border-radius: 5px; margin-bottom: 15px; width: 100%; height:' + (height ? height : '350px') + ';'">
+            :style="`padding: 0; border-radius: 5px; margin-bottom: 15px; width: 100%; height: ${height ? height : '350px'};`">
             <div v-if="title" class="display-flex space-between" style="height: 30px; padding: 5px 10px;">
                 <div style="margin-top: 5px;">
                     <div class="fonts fonts-10 semibold">{{ title ? title : "TITLE" }}</div>
@@ -16,7 +16,7 @@
                     </button>
                 </div>
             </div>
-            <div style="height: calc(100% - 60px); overflow-y: auto; padding: 10px;">
+            <div :style="`height: ${innerHeight ? innerHeight : 'calc(100% - 60px)'}; overflow-y: auto; padding: 10px;`">
                 <slot />
             </div>
         </div>
@@ -31,6 +31,10 @@ export default {
             required: false
         },
         height: {
+            type: String,
+            required: false
+        },
+        innerHeight: {
             type: String,
             required: false
         },

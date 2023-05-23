@@ -39,18 +39,47 @@
                         v-model="form.role_id" 
                         placeholder="Select"
                         no-data-text="No Data Disaplayed"
-                        :disabled="isDetailForm">
+                        :disabled="isDetailForm"
+                        clearable>
                         <el-option
                             v-for="(item, i) in roleData"
                             :key="i"
-                            :label="item.role_name"
-                            :value="item.id">
+                            :label="item.description"
+                            :value="item.id"
+                            style="text-transform: capitalize;">
                         </el-option>
                     </el-select>
                     <div 
                         v-if="errorMessage.role_id" 
                         class="field-error">
                         {{ errorMessage.role_id && errorMessage.role_id[0] }}
+                    </div>
+                </div>
+                <div v-if="isUserEmployee" class="field-group">
+                    <div class="field-label">Employee (Optional)</div>
+                    <el-select 
+                        v-model="form.owner_id" 
+                        placeholder="Select"
+                        no-data-text="No Data Disaplayed"
+                        :disabled="isDetailForm"
+                        clearable>
+                        <el-option
+                            v-for="(item, i) in employeeData"
+                            :key="i"
+                            :label="`${item.employee.name} (${item.role.description})`"
+                            :value="item.employee.id"
+                            class="custom-field-select-employee">
+                            <div class="fonts fonts-10 black semibold custom-field-select-title">{{ item.employee.name }}</div>
+                            <div class="display-flex space-between">
+                                <span class="fonts fonts-10 grey custom-field-select-caption">{{ item.role.description }}</span>
+                                <span class="fonts fonts-10 grey custom-field-select-caption">{{ item.employee.employee_id }}</span>
+                            </div>
+                        </el-option>
+                    </el-select>
+                    <div 
+                        v-if="errorMessage.owner_id" 
+                        class="field-error">
+                        {{ errorMessage.owner_id && errorMessage.owner_id[0] }}
                     </div>
                 </div>
                 <div class="field-group">
@@ -85,7 +114,7 @@
                         placeholder=""
                         type="text"
                         v-model="form.username"
-                        :disabled="true"></el-input>
+                        :disabled="isDetailForm"></el-input>
                     <div 
                         v-if="errorMessage.username" 
                         class="field-error">
@@ -113,7 +142,7 @@
                 <div class="field-group">
                     <div class="field-label">Status</div>
                     <div class="display-flex space-between">
-                        <div class="fonts micro black">Is this user still active ?</div>
+                        <div class="fonts micro black">Is this user {{ form.status === 'active' ? 'Inactive' : 'Active' }} ?</div>
                         <el-switch 
                             v-model="form.status"
                             :disabled="isDetailForm"
@@ -164,6 +193,7 @@ export default {
             errorMessage: (state) => state.storeUsers.errorMessage,
             typeForm: (state) => state.storeUsers.typeForm,
             roleData: (state) => state.storeUsers.role.data,
+            employeeData: (state) => state.storeUsers.employee.data,
         }),
         title () {
             let currentTitle = ''
@@ -186,6 +216,17 @@ export default {
                 status = true 
             }
             return status
+        },
+        isUserEmployee () {
+            let status = false 
+            let role = this.roleData
+                .find((item) => item.id === this.form.role_id)
+            if (role !== undefined) {
+                if (role.role_name !== 'admin' && role.role_name !== 'owner') {
+                    status = true 
+                }
+            }
+            return status 
         },
         getCover () {
             return this.form.image ? this.adminImageThumbnailUrl + this.form.image : ''
@@ -211,3 +252,20 @@ export default {
     },
 }
 </script>
+<style>
+.custom-field-select-employee {
+    height: auto; 
+    padding: 7px 20px;
+}
+.custom-field-select-employee.selected {
+    background-color: #F5F7FA;
+}
+.custom-field-select-employee.selected .custom-field-select-title {
+    color: #409EFF;
+    font-weight: bold;
+}
+.custom-field-select-employee.selected .custom-field-select-caption {
+    color: #151f2d;
+    font-weight: normal;
+}
+</style>

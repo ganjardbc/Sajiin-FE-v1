@@ -1,12 +1,14 @@
 import Layout from '@/components/containers/shop/Layout'
+import Home from '@/components/containers/shop/Index'
 import Profile from '@/components/containers/user/profile/Index'
-import Settings from '@/components/containers/user/settings/Index'
+import Settings from '@/components/containers/shop/settings/Index'
 import Dashboard from '@/components/containers/shop/dashboard/Index'
 import Cashier from '@/components/containers/shop/cashier/Index'
 import CashBook from '@/components/containers/shop/cashBook/Index'
 import Orders from '@/components/containers/shop/orders/Index'
 import TaskLists from '@/components/containers/shop/taskLists/Index'
 import Products from '@/components/containers/shop/products/Index'
+import Categories from '@/components/containers/shop/categories/Index'
 import Employees from '@/components/containers/shop/employees/Index'
 import Shifts from '@/components/containers/shop/shifts/Index'
 import Notifications from '@/components/containers/shop/notifications/Index'
@@ -30,7 +32,7 @@ const routes = {
         {
             name: 'shop-home',
             path: 'home',
-            component: Dashboard
+            component: Home
         },
         {
             name: 'shop-dashboard',
@@ -53,14 +55,19 @@ const routes = {
             component: Orders
         },
         {
-            name: 'shop-tasklists',
-            path: 'tasklists',
+            name: 'shop-task-lists',
+            path: 'task-lists',
             component: TaskLists
         },
         {
             name: 'shop-products',
             path: 'products',
             component: Products
+        },
+        {
+            name: 'shop-categories',
+            path: 'categories',
+            component: Categories
         },
         {
             name: 'shop-tables',

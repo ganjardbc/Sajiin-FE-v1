@@ -1,57 +1,31 @@
 <template>
-    <div id="admin">
-        <div :class="`sidebar ${visibleSidebar && 'show'}`">
-            <div class="header">
-                <div class="header-content display-flex space-between align-center">
-                    <div class="width width-90px" style="margin-left: -5px;">
-                        <div class="title">Owner</div>
+    <div id="app">
+        <div id="header">
+            <div id="header-container">
+                <div class="display-flex space-between align-center" style="height: 60px;">
+                    <div id="logo" class="width width-90px">
+                        <router-link :to="{name: 'owner-home'}" class="width width-90px display-flex align-center">
+                            <img :src="logo" alt="" style="width: 100%;">
+                        </router-link>
                     </div>
-                    <button 
-                        class="close-button btn btn-icon btn-white btn-circle"
-                        @click="onCloseSidebar">
-                        <i class="fa fa-lg fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="content">
-                <AppListMenu 
-                    :data.sync="sidebar"
-                    :isSidebarSmall="true"
-                    @onClick="onCloseSidebar" />
-            </div>
-        </div>
-        <div class="main">
-            <div class="header">
-                <div class="header-content-fixed">
-                    <div class="header-content-main">
-                        <div class="header-content-main-left">
-                            <button 
-                                class="btn btn-white btn-icon btn-circle margin margin-right-5px"
-                                @click="onOpenSidebar">
-                                <i class="icn fa fa-lw fa-bars"></i>
-                            </button>
-                        </div>
-                        <div class="header-content-main-center">
-                            <router-link :to="{name: 'owner-home'}" class="width width-90px">
-                                <img :src="logo" alt="" style="width: 100%;">
+                    <div class="display-flex flex-end align-center">
+                        <div v-for="(dt, i) in sidebar" :key="i">
+                            <router-link 
+                                :to="{name: dt.link}" 
+                                class="btn btn-button-link">
+                                <i :class="`icn icn-left ${dt.icon}`"></i> {{ dt.label }}
                             </router-link>
                         </div>
-                        <div class="header-content-main-right">
-                            <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
-                                <AppCardNotification />
-                            </div>
-                            <AppCardProfile :data.sync="dataUser" />
-                        </div>
                     </div>
                 </div>
             </div>
-            <div class="main-content">
-                <div class="main-content-smalls">
-                    <router-view />
-                </div>
-                <div class="display-flex center padding padding-20px">
-                    <div class="fonts fonts-10 grey align-center">App Version 1.0.0</div>
-                </div>
+        </div>
+        <div id="body">
+            <div id="body-container">
+                <router-view />
+            </div>
+            <div class="display-flex center padding padding-20px">
+                <div class="fonts fonts-10 grey align-center">App Version 1.0.0</div>
             </div>
         </div>
 
@@ -64,30 +38,18 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import VueLoadImage from 'vue-load-image'
-import logo from '@/assets/img/logo.png'
+import logo from '@/assets/img/Logo.png'
 import icon from '@/assets/img/icon.png'
-import AppListMenu from '../../modules/AppListMenu'
 import AppToast from '../../modules/AppToast'
 import AppToastMessage from '../../modules/AppToastMessage'
-import AppCardNotification from '../../modules/AppCardNotification'
-import AppCardProfile from '../../modules/AppCardProfile'
 
 const defaultSidebar = [
-    {
-        icon: 'fa fa-lg fa-database', label: 'SHOP', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-store', label: 'Shops', value: 0, link: 'owner-home', permission: 'shops'},
-        ]
-    },
-    {
-        icon: 'fa fa-lg fa-database', label: 'PROFILE', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-user', label: 'Profile', value: 0, link: 'owner-profile', permission: 'profile'},
-            {icon: 'fa fa-lg fa-cogs', label: 'Settings', value: 0, link: 'owner-settings', permission: 'settings'},
-        ]
-    },
+    {icon: 'fa fa-lg fa-store', label: 'SHOPS', value: 0, link: 'owner-home', permission: 'shops'},
+    {icon: 'fa fa-lg fa-user', label: 'PROFILE', value: 0, link: 'owner-profile', permission: 'profile'},
 ]
 
 export default {
-    name: 'admin',
+    name: 'app',
     data () {
         return {
             logo: logo,
@@ -98,10 +60,10 @@ export default {
         }
     },
     beforeMount (){
-        if (!this.$session.get('token')) {
+        if (!this.$cookies.get('token')) {
             this.$router.push({ name: 'login' })
         }
-        if (this.$session.get('token')) {
+        if (this.$cookies.get('token')) {
             this.userData()
         }
     },
@@ -112,9 +74,6 @@ export default {
         VueLoadImage,
         AppToastMessage,
         AppToast,
-        AppListMenu,
-        AppCardNotification,
-        AppCardProfile,
     },
     methods: {
         ...mapActions({
@@ -154,21 +113,32 @@ export default {
             }
             this.setMultipleToast(payload)
         },
-        async userData () {
-            const token = this.$session.get('tokenBearer')
-            const res = await this.getUserData(token)
-            if (res.data.status === 'ok') {
+        userData () {
+            const token = this.$cookies.get('tokenBearer')
+            this.getUserData(token).then((res) => {
                 const data = res.data.data 
 
-                this.$session.set('user', data.user)
-                this.$session.set('role', data.role)
-                this.$session.set('shop', data.shop)
-                this.$session.set('employee', data.employee)
-                this.$session.set('permissions', data.permissions)
-            }
+                this.$cookies.set('user', data.user)
+                this.$cookies.set('role', data.role)
+                this.$cookies.set('shop', data.shop)
+                this.$cookies.set('employee', data.employee)
+                this.$cookies.set('permissions', JSON.stringify(data.permissions))
+            }).catch(() => {
+                this.$cookies.remove('token')
+                this.$cookies.remove('tokenBearer')
+                this.$cookies.remove('user')
+                this.$cookies.remove('role')
+                this.$cookies.remove('shop')
+                this.$cookies.remove('employee')
+                this.$cookies.remove('permissions')
+                this.$cookies.remove('thermalStatus')
+                this.$cookies.remove('thermalUrl')
+
+                this.$router.replace({ name: 'login' })
+            })
         },
         getShopData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.getShop({ token })
         }
     },

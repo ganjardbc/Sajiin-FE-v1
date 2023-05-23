@@ -62,6 +62,14 @@ import AppCardDashboard from '../../../modules/AppCardDashboard'
 
 export default {
     name: 'App',
+    metaInfo: {
+        title: 'Owner',
+        titleTemplate: '%s | Dashboard',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
     mounted () {
         this.getDashboardMatrix()
         this.getDashboard()
@@ -83,17 +91,17 @@ export default {
             getMatrix: 'storeDashboard/getMatrix',
         }),
         getDashboard () {
-            const shop = this.$session.get('shop')
+            const shop = this.$cookies.get('shop')
             const payload = {
-                token: this.$session.get('tokenBearer'),
+                token: this.$cookies.get('tokenBearer'),
                 shop_id: shop.id,
             }
             this.getData(payload)
         },
         getDashboardMatrix () {
-            const shop = this.$session.get('shop')
+            const shop = this.$cookies.get('shop')
             const payload = {
-                token: this.$session.get('tokenBearer'),
+                token: this.$cookies.get('tokenBearer'),
                 shop_id: shop.id,
             }
             this.getMatrix(payload)

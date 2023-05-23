@@ -17,17 +17,13 @@
                         <Payment />
                     </div>
                     <div class="display-flex space-between">
-                        <div class="fonts fonts-10 normal grey">Subtotal ({{ orderQuantity }} products)</div>
-                        <div class="fonts fonts-10 normal grey">{{ format(orderPrice) }}</div>
-                    </div>
-                    <div class="display-flex space-between">
-                        <div class="fonts fonts-10 normal grey">Discount</div>
-                        <div class="fonts fonts-10 normal grey">{{ format(0) }}</div>
-                    </div>
-                    <div class="padding padding-bottom-15px margin margin-bottom-15px border-bottom"></div>
-                    <div class="display-flex space-between">
                         <div class="fonts fonts-10 semibold black">Total</div>
-                        <div class="fonts fonts-10 semibold orange">{{ format(orderPrice) }}</div>
+                        <div class="fonts fonts-10 semibold main-color">{{ format(orderPrice) }}</div>
+                    </div>
+                    <div v-if="isThereDiscount" class="padding padding-bottom-15px margin margin-bottom-15px border-bottom"></div>
+                    <div v-if="isThereDiscount" class="display-flex space-between">
+                        <div class="fonts fonts-10 normal grey">Discount</div>
+                        <div class="fonts fonts-10 normal black">{{ format(totalDiscount) }}</div>
                     </div>
                 </div>
                 <div class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px">
@@ -36,12 +32,12 @@
                     </div>
                     <div class="field-group">
                         <div class="field-label">Bills Price</div>
-                        <el-input 
-                            placeholder="0"
-                            type="number"
-                            clearable
+                        <currency-input
+                            class="field field-sekunder"
+                            v-model="form.bills_price"
+                            :precision="0"
                             @change="onChangeBills"
-                            v-model="form.bills_price"></el-input>
+                        />
                         <div 
                             v-if="errorMessage.bills_price" 
                             class="field-error">
@@ -54,23 +50,12 @@
                     <div class="padding padding-bottom-7px margin margin-bottom-15px border-bottom"></div>
                     <div class="display-flex space-between">
                         <div class="fonts fonts-10 semibold black">Change</div>
-                        <div class="fonts fonts-10 semibold orange">{{ format(form.change_price) }}</div>
+                        <div class="fonts fonts-10 semibold main-color">{{ format(form.change_price) }}</div>
                     </div>
                 </div>
             </div>
             <div slot="footer">
                 <div class="right-form-footer">
-                    <div class="field-group" style="padding-top: 0;">
-                        <div class="field-label">Order Status</div>
-                        <div class="display-flex space-between">
-                            <div class="fonts micro black">Make this order status as "Done" ?</div>
-                            <el-switch 
-                                v-model="form.status"
-                                :disabled="isButtonEnable"
-                                :active-value="'done'"
-                                :inactive-value="'on-progress'"></el-switch>
-                        </div>
-                    </div>
                     <button 
                         class="btn btn-main btn-full"
                         :disabled="isButtonEnable"
@@ -88,9 +73,8 @@ import AppEmpty from '../../../../modules/AppEmpty'
 import AppSideForm from '../../../../modules/AppSideForm'
 import AppCardCapsule from '../../../../modules/AppCardCapsule'
 import AppCardPriceSuggestion from '../../../../modules/AppCardPriceSuggestion'
-import CardProduct from './CardProduct'
-import Payment from '../payment'
-import Table from '../table'
+import Payment from '../payment/Index'
+import Table from '../table/Index'
 
 export default {
     name: 'App',
@@ -99,7 +83,6 @@ export default {
         AppSideForm,
         AppCardCapsule,
         AppCardPriceSuggestion,
-        CardProduct,
         Payment,
         Table
     },
@@ -123,6 +106,30 @@ export default {
                 price += quantity * item.price
             })
             return price
+        },
+        orderPriceBeforeDiscount () {
+            let price = 0
+            this.details && this.details.map((item) => {
+                let quantity = item.quantity
+                if (item.is_discount) {
+                    price += quantity * item.second_price
+                } else {
+                    price += quantity * item.price
+                }
+            })
+            return price
+        },
+        totalDiscount () {
+            return this.orderPriceBeforeDiscount - this.orderPrice
+        },
+        isThereDiscount () {
+            let status = false
+            this.details && this.details.map((item) => {
+                if (item.is_discount) {
+                    status = true 
+                }
+            })
+            return status
         },
         isButtonEnable () {
             let status = false 

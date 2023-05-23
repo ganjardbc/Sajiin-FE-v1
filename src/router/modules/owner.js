@@ -1,7 +1,9 @@
 import Layout from '@/components/containers/owner/Layout'
+// import Home from '@/components/containers/owner/Index'
 import Shops from '@/components/containers/owner/shops/Index'
-import Profile from '@/components/containers/user/profile/Index'
-import Settings from '@/components/containers/user/settings/Index'
+import Categories from '@/components/containers/owner/categories/Index'
+import Profile from '@/components/containers/owner/profile/Index'
+import Settings from '@/components/containers/owner/settings/Index'
 
 const routes = {
     path: '/owner',
@@ -11,6 +13,16 @@ const routes = {
             name: 'owner-home',
             path: 'home',
             component: Shops
+        },
+        // {
+        //     name: 'owner-shops',
+        //     path: 'shops',
+        //     component: Shops
+        // },
+        {
+            name: 'owner-categories',
+            path: 'categories',
+            component: Categories
         },
         {
             name: 'owner-profile',
@@ -22,7 +34,7 @@ const routes = {
             path: 'settings',
             component: Settings
         },
-    ]
+    ],
 }
 
 export default routes 

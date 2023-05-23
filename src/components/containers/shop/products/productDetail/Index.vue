@@ -184,7 +184,7 @@ export default {
 
         // LIST DATA
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             const product_id = this.formProduct.product_id 
             this.getProductDetail({ token: token, product_id: product_id })
         },
@@ -208,7 +208,7 @@ export default {
         },
         onClickYes () {
             this.visibleConfirmed = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             switch (this.typeForm) {
                 case 'create':
                     this.createData({
@@ -221,8 +221,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to save this varian'
+                            this.$message({
+                                message: 'Failed to save this varian',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -237,8 +239,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to edit this varian'
+                            this.$message({
+                                message: 'Failed to edit this varian',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -293,7 +297,7 @@ export default {
         },
         onClickYesDelete () {
             this.visibleConfirmedDelete = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.deleteData({
                 ...this.form,
                 token: token
@@ -321,7 +325,7 @@ export default {
         },
         onUpdateCover (data) {
             this.visibleUpdateCover = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.uploadCover({
                 ...this.form,
                 image: data,

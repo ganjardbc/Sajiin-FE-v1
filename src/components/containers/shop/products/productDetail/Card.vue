@@ -7,7 +7,7 @@
             <div class="display-flex space-between align-center padding padding-bottom-15px margin margin-bottom-20px border-bottom">
                 <div>
                     <div class="fonts fonts-10 semibold">{{ dt.proddetail_id }}</div>
-                    <div class="fonts fonts-10 grey">{{ dt.created_at | moment("from", "now") }}</div>
+                    <div class="fonts fonts-10 grey">{{ dt.created_at | moment("DD MMMM YYYY") }}</div>
                 </div>
                 <div class="display-flex flex-end align-center">
                     <AppCardCapsule :data="dt.status" class="margin margin-left-10px" />

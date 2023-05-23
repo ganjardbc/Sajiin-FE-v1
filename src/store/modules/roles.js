@@ -1,12 +1,20 @@
 import axios from 'axios'
 
+const defaultTypeLists = () => {
+    return [
+        {label: 'Admin', value: 'admin'},
+        {label: 'Employee', value: 'employee'}
+    ]
+}
+
 const defaultMessage = () => {
     return {
         id: '',
         role_id: '',
         role_name: '',
+        description: '',
+        type: '',
         status: '',
-        description: ''
     }
 }
 
@@ -15,8 +23,9 @@ const defaultForm = () => {
         id: '',
         role_id: '',
         role_name: '',
+        description: '',
+        type: 'admin',
         status: 'active',
-        description: ''
     }
 }
 
@@ -26,6 +35,7 @@ export default {
     state: {
         form: defaultForm(),
         errorMessage: defaultMessage(),
+        typeLists: defaultTypeLists(),
         limit: 10,
         offset: 0,
         totalRecord: 0,

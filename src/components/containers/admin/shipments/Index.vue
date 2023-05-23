@@ -106,6 +106,14 @@ import Card from './Card'
 
 export default {
     name: 'App',
+    metaInfo: {
+        title: 'Admin',
+        titleTemplate: '%s | Shipments',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
     data () {
         return {
             formClass: false,
@@ -178,7 +186,7 @@ export default {
 
         // LIST DATA
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.getShipment({ token })
         },
         handleCurrentChange (value) {
@@ -201,7 +209,7 @@ export default {
         },
         onClickYes () {
             this.visibleConfirmed = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             switch (this.typeForm) {
                 case 'create':
                     this.createData({
@@ -213,8 +221,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to save this shipment'
+                            this.$message({
+                                message: 'Failed to save this shipment',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -228,8 +238,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to edit this shipment'
+                            this.$message({
+                                message: 'Failed to edit this shipment',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -282,7 +294,7 @@ export default {
         },
         onClickYesDelete () {
             this.visibleConfirmedDelete = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.deleteData({
                 ...this.form,
                 token: token
@@ -310,7 +322,7 @@ export default {
         },
         onUpdateCover (data) {
             this.visibleUpdateCover = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.uploadCover({
                 ...this.form,
                 image: data,

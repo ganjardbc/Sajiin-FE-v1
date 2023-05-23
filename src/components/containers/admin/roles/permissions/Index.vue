@@ -160,7 +160,7 @@ export default {
 
         // LIST DATA
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             const role_id = this.roleForm.id 
             this.getRoles({ token: token, role_id: role_id })
         },
@@ -195,7 +195,7 @@ export default {
         },
         onClickYesDelete () {
             this.visibleConfirmedDelete = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.deleteData({
                 ...this.form,
                 token: token
@@ -212,7 +212,7 @@ export default {
 
         // SELECT
         onSelect (data) {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             const payload = {
                 token: token,
                 role_id: this.roleForm.id,
@@ -225,8 +225,10 @@ export default {
                         this.formClass = false 
                         this.getData()
                     } else {
-                        this.visibleAlert = true 
-                        this.titleAlert = 'Failed to save this permission'
+                        this.$message({
+                            message: 'Failed to add this permission',
+                            type: 'error'
+                        })
                     }
                 })
         }

@@ -10,47 +10,74 @@
                             @click="onRefresh">
                             <i class="fa fa-lw fa-retweet"></i>
                         </button>
-                        <el-select 
-                            v-model="filter.payment_status" 
-                            @change="handleFilterSearch"
-                            clearable
-                            placeholder="Select"
-                            no-data-text="No Data Disaplayed"
-                            class="width width-100px margin margin-right-15px no-margin-padding">
-                            <el-option
-                                v-for="(item, i) in orderPaymentStatus"
-                                :key="i"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
                     </div>
                 </div>
                 <div class="width width-25 width-mobile">
                     <SearchField 
-                        :placeholder="'Search by order-id ..'" 
+                        :placeholder="'Search orders ..'" 
                         :enableResponsive="true" 
                         :onChange="(data) => onSearch(data)" />
                 </div>
             </div>
 
-            <AppTabs 
-                :selectedIndex.sync="selectedIndex" 
-                :data="tabs" 
-                :onChange="(data) => onChangeTabs(data)"
-                class="width width-500px width-mobile margin margin-bottom-20px" />
+            <div class="display-flex row-reverse space-between align-center display-mobile">
+                <div 
+                    class="width width-300px width-mobile display-flex space-between" 
+                    style="padding-bottom: 10px;">
+                    <el-select 
+                        v-model="filter.payment_status" 
+                        @change="handleFilterSearch"
+                        clearable
+                        placeholder="Select payment"
+                        no-data-text="No Data Disaplayed"
+                        style="width: calc(50% - 7.5px);">
+                        <el-option
+                            v-for="(item, i) in orderPaymentStatus"
+                            :key="i"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-select 
+                        v-model="filter.cashbook_id" 
+                        @change="handleFilterSearch"
+                        :loading="loadingCashbook"
+                        clearable
+                        placeholder="Select cash book"
+                        no-data-text="No Data Disaplayed"
+                        style="width: calc(50% - 7.5px);">
+                        <el-option
+                            v-for="(item, i) in cashBookList(stateCashbookList)"
+                            :key="i"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div 
+                    class="width width-500px width-mobile"
+                    style="padding-bottom: 10px;">
+                    <AppTabs 
+                        :selectedIndex.sync="selectedIndex" 
+                        :isFull="true"
+                        :isScrollable="false"
+                        :data="tabs" 
+                        :onChange="(data) => onChangeTabs(data)"
+                    />
+                </div>
+            </div>
 
             <div class="width width-100">
                 <div v-loading="loading">
                     <AppEmpty v-if="data.length === 0" />
                     <Card 
                         :data.sync="data"
-                        @onChangeCover="uploadImage"
                         @onDetail="onDetail"
                         @onEdit="onEdit"
                         @onDelete="onDelete"
                         @onChangeStatus="onChangeStatus"
-                        @onCheckout="onOpenCheckout" />
+                        @onCheckout="onOpenCheckout"
+                        @onReceipt="onOpenReceipt" />
                 </div>
                 <div class="width width-100 display-flex flex-end align-center padding padding-top-15px">
                     <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
@@ -70,14 +97,15 @@
 
         <div :class="`content-form ${!visibleFormOrder && 'hide'}`">
             <div class="right">
-                <Form 
-                    @uploadImage="uploadImage"
-                    @removeImage="removeImage"
+                <DetailOrder 
                     @onSave="onOpenVisibleConfirmed"
                     @onClose="onClose"
                     @onChangeStatus="onChangeStatus"
-                    @onCheckout="onOpenCheckout">
-                </Form>
+                    @onCheckout="onOpenCheckout"
+                    @onReceipt="onOpenReceipt"
+                    @onProduct="onOpenProduct"
+                    @onCustomer="onOpenCustomer">
+                </DetailOrder>
             </div>
         </div>
 
@@ -91,11 +119,33 @@
             </div>
         </div>
 
-        <AppFileUpload 
-            v-if="visibleUpdateCover"
-            @onClose="onCloseCover"
-            @onUpload="onUpdateCover"
-        />
+        <div :class="`content-form ${!visibleFormReceipt && 'hide'}`">
+            <div class="right">
+                <FormReceipt 
+                    @onSave="onOpenReceipt"
+                    @onClose="onCloseReceipt"
+                    @onPrint="onPrintReceipt">
+                </FormReceipt>
+            </div>
+        </div>
+
+        <div :class="`content-form ${!visibleFormCustomer && 'hide'}`">
+            <div class="right">
+                <FormCustomer 
+                    @onSave="onSaveCustomer"
+                    @onClose="onCloseCustomer">
+                </FormCustomer>
+            </div>
+        </div>
+
+        <div :class="`content-form ${!visibleFormProduct && 'hide'}`">
+            <div class="right">
+                <FormProduct 
+                    @onSave="onSaveProduct"
+                    @onClose="onCloseProduct">
+                </FormProduct>
+            </div>
+        </div>
 
         <AppPopupConfirmed 
             v-if="visibleConfirmed"
@@ -109,6 +159,13 @@
             :title="titleConfirmedStatus"
             @onClickNo="onClickNoStatus"
             @onClickYes="onClickYesStatus"
+        />
+
+        <AppPopupConfirmed 
+            v-if="visibleConfirmedProduct"
+            :title="titleConfirmedProduct"
+            @onClickNo="onClickNoProduct"
+            @onClickYes="onClickYesProduct"
         />
 
         <AppPopupConfirmed 
@@ -137,16 +194,18 @@ import AppEmpty from '../../../modules/AppEmpty'
 import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
-import AppFileUpload from '../../../modules/AppFileUpload'
 import SearchField from '../../../modules/SearchField'
 import AppTabs from '../../../modules/AppTabs'
-import Form from './Form'
+import DetailOrder from './DetailOrder'
 import Card from './Card'
-import FormCheckout from './checkOut'
+import FormCheckout from './checkOut/Index'
+import FormReceipt from './receipt/Index'
+import FormProduct from './product/Index'
+import FormCustomer from './customer/Index'
 
 const tabs = [
-    {id: 1, label: 'All', status: 'active'},
-    {id: 2, label: 'New', status: ''},
+    {id: 1, label: 'All Order', status: 'active'},
+    {id: 2, label: 'New Order', status: ''},
     {id: 3, label: 'On Progress', status: ''},
     {id: 4, label: 'Done', status: ''},
     {id: 5, label: 'Canceled', status: ''},
@@ -154,20 +213,32 @@ const tabs = [
 
 export default {
     name: 'App',
+    metaInfo: {
+        title: 'Shop',
+        titleTemplate: '%s | Orders',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
     data () {
         return {
             formClass: false,
             visibleFormOrder: false,
             visibleFormCheckout: false,
-            visibleUpdateCover: false,
+            visibleFormReceipt: false,
+            visibleFormProduct: false,
+            visibleFormCustomer: false,
             visibleAlert: false,
             titleAlert: 'Failed to preceed data',
             iconAlert: 'fa fa-4x fa-info-circle',
             visibleConfirmed: false,
             visibleConfirmedDelete: false,
             visibleConfirmedStatus: false,
+            visibleConfirmedProduct: false,
             titleConfirmed: 'Save this data ?',
             titleConfirmedStatus: 'Update this order status ?',
+            titleConfirmedProduct: 'Update product from this order ?',
             currentPage: 1,
             selectedIndex: 0,
             selectedData: null,
@@ -182,12 +253,14 @@ export default {
         AppPopupLoader,
         AppPopupConfirmed,
         AppPopupAlert,
-        AppFileUpload,
         AppTabs,
         SearchField,
-        Form,
+        DetailOrder,
         Card,
-        FormCheckout
+        FormCheckout,
+        FormReceipt,
+        FormProduct,
+        FormCustomer,
     },
     computed: {
         ...mapState({
@@ -201,7 +274,12 @@ export default {
             loadingForm: (state) => state.storeOrders.loadingForm,
             typeForm: (state) => state.storeOrders.typeForm,
             formVarian: (state) => state.storeOrdersDetail.form,
+            loadingCashbook: (state) => state.storeCashBook.loading,
+            dataCurrent: (state) => state.storeCashBook.dataCurrent,
         }),
+        stateCashbookList () {
+            return this.dataCurrent && this.dataCurrent.all_cashbook
+        },
         typeForm: {
             get () {
                 return this.$store.state.storeOrders.typeForm
@@ -231,10 +309,8 @@ export default {
             createData: 'storeOrders/createData',
             updateData: 'storeOrders/updateData',
             deleteData: 'storeOrders/deleteData',
-            uploadCover: 'storeOrders/uploadCover',
+            updateDataProduct: 'storeOrders/updateDataProduct',
             setLoadingForm: 'storeOrders/setLoadingForm',
-            updateDataVarian: 'storeOrdersDetail/updateData',
-            setFormDataVarian: 'storeOrdersDetail/setFormData',
         }),
         onSearch (data) {
             this.filter.search = data 
@@ -269,11 +345,13 @@ export default {
             this.handleFilterSearch()
         },
 
-        // LIST DATA
+        // LIST DATA 
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             const shop_id = this.shopId
-            this.getOrder({ token, shop_id })
+            if (shop_id) {
+                this.getOrder({ token, shop_id })
+            }
         },
         handleCurrentChange (value) {
             this.setPagination(value)
@@ -295,54 +373,33 @@ export default {
         },
         onClickYes () {
             this.visibleConfirmed = false 
-            const token = this.$session.get('tokenBearer')
-            switch (this.typeForm) {
-                case 'create':
-                    this.createData({
-                        ...this.form,
-                        token: token
-                    }).then((res) => {
-                        const status = res.data.status 
-                        if (status === 'ok') {
-                            this.visibleFormOrder = false 
-                            this.visibleFormCheckout = false 
-                            this.getData()
-                        } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to save this order'
-                        }
-                    })
-                    break
-                case 'edit':
-                    this.updateData({
-                        ...this.form,
-                        token: token
-                    }).then((res) => {
-                        const status = res.data.status 
-                        if (status === 'ok') {
-                            this.visibleFormOrder = false 
-                            this.visibleFormCheckout = false 
-                            this.getData()
-                        } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to edit this order'
-                        }
-                    })
-                    break
-            }
+            const token = this.$cookies.get('tokenBearer')
+            this.updateData({
+                ...this.form,
+                token: token
+            }).then((res) => {
+                const status = res.data.status 
+                if (status === 'ok') {
+                    this.visibleFormOrder = false 
+                    this.visibleFormCheckout = false 
+                    this.visibleFormCustomer = false 
+                    this.getData()
+                    this.$message('This order has been updated')
+
+                    if (this.typeForm === 'checkout') {
+                        this.visibleFormReceipt = true 
+                    }
+                } else {
+                    this.visibleAlert = true 
+                    this.titleAlert = 'Failed to save this order'
+                }
+            })
         },
 
         // SAVE
         onOpenVisibleConfirmed () {
             this.visibleConfirmed = true
-            switch (this.typeForm) {
-                case 'create':
-                    this.titleConfirmed = 'Save this order ?'
-                    break
-                case 'edit':
-                    this.titleConfirmed = 'Edit this order ?'
-                    break
-            }
+            this.titleConfirmed = 'Save this order ?'
         },
 
         // CREATE
@@ -379,7 +436,7 @@ export default {
         },
         onClickYesDelete () {
             this.visibleConfirmedDelete = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.deleteData({
                 ...this.form,
                 token: token
@@ -387,38 +444,10 @@ export default {
                 const status = res.data.status 
                 if (status === 'ok') {
                     this.getData()
+                    this.$message('This order has been deleted')
                 } else {
                     this.visibleAlert = true 
                     this.titleAlert = 'Failed to delete this order'
-                }
-            })
-        },
-
-        // IMAGE
-        uploadImage (data) {
-            this.visibleUpdateCover = true
-            this.setFormData(data)
-        },
-        removeImage () {
-            console.log('removeImage')
-        },
-        onCloseCover () {
-            this.visibleUpdateCover = false 
-        },
-        onUpdateCover (data) {
-            this.visibleUpdateCover = false 
-            const token = this.$session.get('tokenBearer')
-            this.uploadCover({
-                ...this.form,
-                image: data,
-                token: token
-            }).then((res) => {
-                const status = res.data.status 
-                if (status === 'ok') {
-                    this.getData()
-                } else {
-                    this.visibleAlert = true 
-                    this.titleAlert = 'Failed to upload cover'
                 }
             })
         },
@@ -431,7 +460,7 @@ export default {
             this.visibleFormOrder = false
             this.visibleConfirmedStatus = false 
 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.setFormData(this.selectedData)
             this.updateData({
                 ...this.form,
@@ -439,22 +468,34 @@ export default {
             }).then((res) => {
                 const status = res.data.status 
                 if (status === 'ok') {
-                    this.$message(`Success changed status for order ${this.selectedData.order_id}.`)
                     this.getData()
+                    this.$message(`Success changed status for order ${this.selectedData.order_id}.`)
                 } else {
                     this.$message(`Failed to change status for order ${this.selectedData.order_id}.`)
                 }
             })
         },
         onChangeStatus (data) {
+            if (data.status === 'new-order') {
+               this.titleConfirmedStatus = 'Re-Open this order ?'
+            }
+            if (data.status === 'on-progress') {
+               this.titleConfirmedStatus = 'Pick this order ?'
+            }
+            if (data.status === 'done') {
+               this.titleConfirmedStatus = 'Mark as "Done" for this order ?'
+            }
+            if (data.status === 'canceled') {
+               this.titleConfirmedStatus = 'Cancel this order ?'
+            }
             this.visibleConfirmedStatus = true 
-            this.titleConfirmedStatus = `Update this order status to "${data.status}"`
             this.selectedData = data 
         },
 
         // CHECKOUT 
         onOpenCheckout (data) {
             this.visibleFormCheckout = true 
+            this.typeForm = 'checkout'
             this.setFormData(data)
         },
         onCloseCheckout () {
@@ -462,7 +503,82 @@ export default {
         },
         onSaveCheckout () {
             this.visibleFormCheckout = false 
-        }
+        },
+
+        // RECEIPT 
+        onOpenReceipt (data) {
+            this.visibleFormReceipt = true 
+            this.typeForm = 'receipt'
+            this.setFormData(data)
+        },
+        onCloseReceipt () {
+            this.visibleFormReceipt = false
+        },
+        onPrintReceipt () {
+            alert('onPrintReceipt')
+        },
+
+        // CUSTOMER
+        onOpenCustomer (data) {
+            this.visibleFormCustomer = true 
+            this.typeForm = 'edit-customer'
+            this.setFormData(data)
+        },
+        onSaveCustomer () {
+            this.visibleConfirmed = true
+            this.titleConfirmed = 'Edit this customer ?'
+        },
+        onCloseCustomer () {
+            this.visibleFormCustomer = false 
+        },
+
+        // PRODUCT 
+        onOpenProduct (data) {
+            this.visibleFormProduct = true 
+            this.typeForm = 'edit-product'
+            this.setFormData(data)
+        },
+        onCloseProduct () {
+            this.visibleFormProduct = false
+        },
+        onSaveProduct () {
+            this.visibleConfirmedProduct = true
+        },
+        onClickNoProduct () {
+            this.visibleConfirmedProduct = false 
+        },
+        onClickYesProduct () {
+            this.visibleConfirmedProduct = false 
+
+            const token = this.$cookies.get('tokenBearer')
+            const order = this.form 
+            const details = this.form.details
+
+            delete order.shop_image
+            delete order.details
+            delete order.shop 
+            delete order.table 
+            delete order.payment
+            delete order.cashier
+            delete order.created_by
+            delete order.created_at
+
+            this.updateDataProduct({
+                order: order,
+                details: details,
+                token: token
+            }).then((res) => {
+                const status = res.data.status 
+                if (status === 'ok') {
+                    this.visibleFormOrder = false
+                    this.visibleFormProduct = false
+                    this.getData()
+                    this.$message(`Success changed products for order ${this.form.order_id}.`)
+                } else {
+                    this.$message(`Failed to change products for order ${this.form.order_id}.`)
+                }
+            })
+        },
     }
 }
 </script>

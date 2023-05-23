@@ -20,19 +20,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="field-group">
-                    <div class="field-label">Shop ID</div>
-                    <el-input 
-                        placeholder=""
-                        type="text"
-                        v-model="form.shop_id"
-                        :disabled="true"></el-input>
-                    <div 
-                        v-if="errorMessage.shop_id" 
-                        class="field-error">
-                        {{ errorMessage.shop_id && errorMessage.shop_id[0] }}
-                    </div>
-                </div> -->
                 <div class="field-group">
                     <div class="field-label">Table ID</div>
                     <el-input 
@@ -87,6 +74,26 @@
                     </div>
                 </div>
             </div>
+
+            <div class="margin margin-bottom-0px">
+                <div class="fonts fonts-13 black semibold">Configuration</div>
+                <div class="field-group">
+                    <div class="field-label">Status</div>
+                    <div class="display-flex space-between">
+                        <div class="fonts micro black">Is this table {{ form.status === 'active' ? 'Inactive' : 'Active' }} ?</div>
+                        <el-switch 
+                            v-model="form.status"
+                            :disabled="isDetailForm"
+                            :active-value="'active'"
+                            :inactive-value="'inactive'"></el-switch>
+                    </div>
+                    <div 
+                        v-if="errorMessage.status" 
+                        class="field-error">
+                        {{ errorMessage.status && errorMessage.status[0] }}
+                    </div>
+                </div>
+            </div>
         </AppSideForm>
     </div>
 </template>
@@ -107,27 +114,37 @@ export default {
             form: (state) => state.storeTable.form,
             errorMessage: (state) => state.storeTable.errorMessage,
             dayLists: (state) => state.storeTable.dayLists,
+            typeForm: (state) => state.storeTable.typeForm,
         }),
         isDetailForm () {
             let status = false 
-            if (this.title === 'DETAIL') {
+            if (this.typeForm === 'detail') {
                 status = true 
             }
             return status
         },
         getCover () {
             return this.form.image ? this.tableImageThumbnailUrl + this.form.image : ''
-        }
+        },
+        title () {
+            let currentTitle = ''
+            switch (this.typeForm) {
+                case 'create':
+                    currentTitle = 'Create Table'
+                    break
+                case 'detail':
+                    currentTitle = 'Detail Table'
+                    break
+                case 'edit':
+                    currentTitle = 'Edit Table'
+                    break
+            }
+            return currentTitle
+        },
     },
     components: {
         AppSideForm,
         AppImage,
-    },
-    props: {
-        title: {
-            type: String,
-            required: true
-        },
     },
     methods: {
         uploadImage (data) {

@@ -17,7 +17,8 @@
             </el-table-column>
             <el-table-column
                 prop="description"
-                label="Description">
+                label="Description"
+                min-width="250">
             </el-table-column>
             <el-table-column 
                 label="Status"

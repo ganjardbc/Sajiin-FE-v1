@@ -23,16 +23,19 @@
                             class="btn btn-sekunder btn-small-icon btn-circle" 
                             style="position: absolute; bottom: 5px; right: 23px;" 
                             @click="onChangeCover(scope.row)">
-                            <i class="post-center fonts fonts-11 grey fa fa-lg fa-camera" />
+                            <i class="post-middle-absolute fonts fonts-11 grey fa fa-lg fa-camera" />
                         </button>
                     </div>
                 </template>
             </el-table-column>
             <el-table-column
                 prop="name"
-                label="Name">
+                label="Name"
+                min-width="180">
             </el-table-column>
-            <el-table-column label="Role">
+            <el-table-column 
+                label="Role"
+                min-width="180">
                 <template slot-scope="scope">
                     {{ scope.row.role ? scope.row.role.role_name : '-' }}
                 </template>

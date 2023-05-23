@@ -106,6 +106,14 @@ import Card from './Card'
 
 export default {
     name: 'App',
+    metaInfo: {
+        title: 'Admin',
+        titleTemplate: '%s | Shops',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
     data () {
         return {
             formClass: false,
@@ -120,6 +128,7 @@ export default {
         }
     },
     mounted () {
+        this.getUserData()
         this.getData()
     },
     components: {
@@ -134,35 +143,36 @@ export default {
     },
     computed: {
         ...mapState({
-            filter: (state) => state.storeShop.filter,
-            form: (state) => state.storeShop.form,
-            data: (state) => state.storeShop.data,
-            totalRecord: (state) => state.storeShop.totalRecord,
-            limit: (state) => state.storeShop.limit,
-            loading: (state) => state.storeShop.loading,
-            loadingForm: (state) => state.storeShop.loadingForm,
-            typeForm: (state) => state.storeShop.typeForm
+            filter: (state) => state.storeShopAdmin.filter,
+            form: (state) => state.storeShopAdmin.form,
+            data: (state) => state.storeShopAdmin.data,
+            totalRecord: (state) => state.storeShopAdmin.totalRecord,
+            limit: (state) => state.storeShopAdmin.limit,
+            loading: (state) => state.storeShopAdmin.loading,
+            loadingForm: (state) => state.storeShopAdmin.loadingForm,
+            typeForm: (state) => state.storeShopAdmin.typeForm
         }),
         typeForm: {
             get () {
-                return this.$store.state.storeShop.typeForm
+                return this.$store.state.storeShopAdmin.typeForm
             },
             set (value) {
-                this.$store.state.storeShop.typeForm = value
+                this.$store.state.storeShopAdmin.typeForm = value
             }
         },
     },
     methods: {
         ...mapActions({
-            getShop: 'storeShop/getData',
-            setPagination: 'storeShop/setPagination',
-            resetFormData: 'storeShop/resetFormData',
-            resetFilter: 'storeShop/resetFilter',
-            setFormData: 'storeShop/setFormData',
-            createData: 'storeShop/createData',
-            updateData: 'storeShop/updateData',
-            deleteData: 'storeShop/deleteData',
-            uploadCover: 'storeShop/uploadCover',
+            getShop: 'storeShopAdmin/getData',
+            getUser: 'storeShopAdmin/getDataUser',
+            setPagination: 'storeShopAdmin/setPagination',
+            resetFormData: 'storeShopAdmin/resetFormData',
+            resetFilter: 'storeShopAdmin/resetFilter',
+            setFormData: 'storeShopAdmin/setFormData',
+            createData: 'storeShopAdmin/createData',
+            updateData: 'storeShopAdmin/updateData',
+            deleteData: 'storeShopAdmin/deleteData',
+            uploadCover: 'storeShopAdmin/uploadCover',
         }),
         onSearch (data) {
             this.filter.search = data 
@@ -178,7 +188,7 @@ export default {
 
         // LIST DATA
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.getShop({ token })
         },
         handleCurrentChange (value) {
@@ -188,6 +198,10 @@ export default {
         handleFilterSearch () {
             this.currentPage = 1
             this.handleCurrentChange(1)
+        },
+        getUserData () {
+            const token = this.$cookies.get('tokenBearer')
+            this.getUser({ token })
         },
 
         // ALERT
@@ -201,7 +215,7 @@ export default {
         },
         onClickYes () {
             this.visibleConfirmed = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             switch (this.typeForm) {
                 case 'create':
                     this.createData({
@@ -213,8 +227,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to save this shop'
+                            this.$message({
+                                message: 'Failed to save this shop',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -228,8 +244,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to edit this shop'
+                            this.$message({
+                                message: 'Failed to edit this shop',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -282,7 +300,7 @@ export default {
         },
         onClickYesDelete () {
             this.visibleConfirmedDelete = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.deleteData({
                 ...this.form,
                 token: token
@@ -310,7 +328,7 @@ export default {
         },
         onUpdateCover (data) {
             this.visibleUpdateCover = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.uploadCover({
                 ...this.form,
                 image: data,

@@ -2,7 +2,7 @@
     <div id="AppImageProduct">
         <div v-for="(detail, j) in data.slice(from ? from : 0, to ? to : data.length)" :key="j" class="display-flex" style="padding-top: 10px; padding-bottom: 10px;">
             <div style="width: 75px; margin-right: 15px;">
-                <div class="image image-padding">
+                <div class="image image-padding border-full">
                     <VueLoadImage v-if="detail.product_image">
                         <img slot="image" :src="productImageThumbnailUrl + detail.product_image" alt="" class="post-center">
                         <div slot="preloader">

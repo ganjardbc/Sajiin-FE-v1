@@ -22,7 +22,7 @@ export default {
         }
     },
     mounted() {
-        this.permissions = this.$session.get('permissions')
+        this.permissions = this.$cookies.get('permissions')
     },
     methods: {
         onCheckPermission (prm) {

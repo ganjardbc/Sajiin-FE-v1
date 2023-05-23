@@ -1,6 +1,5 @@
 import Layout from '@/components/containers/auth/Layout'
 import Login from '@/components/containers/auth/Login'
-import Register from '@/components/containers/auth/Register'
 
 const routes = {
     path: '/',
@@ -10,11 +9,6 @@ const routes = {
             name: 'login',
             path: '/',
             component: Login
-        },
-        {
-            name: 'register',
-            path: '/register',
-            component: Register
         },
     ]
 }

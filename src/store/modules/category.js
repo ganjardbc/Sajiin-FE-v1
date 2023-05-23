@@ -7,7 +7,8 @@ const defaultMessage = () => {
         image: '',
         name: '',
         status: '',
-        description: ''
+        description: '',
+        shop_id: '',
     }
 }
 
@@ -18,7 +19,8 @@ const defaultForm = () => {
         image: '',
         name: '',
         status: 'active',
-        description: ''
+        description: '',
+        shop_id: '',
     }
 }
 
@@ -38,7 +40,7 @@ export default {
         data: [],
         filter: {
             search: '',
-            status: '',
+            status: 'active',
         }
     },
 
@@ -109,11 +111,12 @@ export default {
 
             let dataPrev = []
 
-            const params = {
+            let params = {
                 limit: state.limit,
                 offset: state.offset,
                 search: state.filter.search,
                 status: state.filter.status,
+                shop_id: data.shop_id
             }
 
             return axios.post('/api/category/getAll', params, { 

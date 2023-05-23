@@ -9,45 +9,40 @@
         <div class="padding padding-bottom-15px">
             <div class="display-flex display-mobile space-between">
                 <div class="width width-row-5">
-                    <AppCardDashboard height="180px">
+                    <AppCardDashboard height="180px" innerHeight="calc(100% - 20px)">
                         <div class="post-top display-flex column center align-center">
-                            <div class="padding padding-top-30px"></div>
-                            <div class="fonts fonts-32 orange semibold">{{ matrix ? matrix.allOrder : 0 }}</div>
+                            <div class="fonts fonts-32 teal semibold">{{ matrix ? matrix.allOrder : 0 }}</div>
                             <div class="fonts fonts-10 grey">All Orders</div>
                         </div>
                     </AppCardDashboard>
                 </div>
                 <div class="width width-row-5">
-                    <AppCardDashboard height="180px">
+                    <AppCardDashboard height="180px" innerHeight="calc(100% - 20px)">
                         <div class="post-top display-flex column center align-center">
-                            <div class="padding padding-top-30px"></div>
                             <div class="fonts fonts-32 teal semibold">{{ matrix ? matrix.newOrder : 0 }}</div>
                             <div class="fonts fonts-10 grey">New Orders</div>
                         </div>
                     </AppCardDashboard>
                 </div>
                 <div class="width width-row-5">
-                    <AppCardDashboard height="180px">
+                    <AppCardDashboard height="180px" innerHeight="calc(100% - 20px)">
                         <div class="post-top display-flex column center align-center">
-                            <div class="padding padding-top-30px"></div>
                             <div class="fonts fonts-32 teal semibold">{{ matrix ? matrix.onProgress : 0 }}</div>
                             <div class="fonts fonts-10 grey">On Progress Orders</div>
                         </div>
                     </AppCardDashboard>
                 </div>
                 <div class="width width-row-5">
-                    <AppCardDashboard height="180px">
+                    <AppCardDashboard height="180px" innerHeight="calc(100% - 20px)">
                         <div class="post-top display-flex column center align-center">
-                            <div class="padding padding-top-30px"></div>
                             <div class="fonts fonts-32 teal semibold">{{ matrix ? matrix.done : 0 }}</div>
                             <div class="fonts fonts-10 grey">Done Orders</div>
                         </div>
                     </AppCardDashboard>
                 </div>
                 <div class="width width-row-5">
-                    <AppCardDashboard height="180px">
+                    <AppCardDashboard height="180px" innerHeight="calc(100% - 20px)">
                         <div class="post-top display-flex column center align-center">
-                            <div class="padding padding-top-30px"></div>
                             <div class="fonts fonts-32 teal semibold">{{ matrix ? matrix.canceled : 0 }}</div>
                             <div class="fonts fonts-10 grey">Canceled Orders</div>
                         </div>
@@ -71,6 +66,14 @@ import AppCardDashboard from '../../../modules/AppCardDashboard'
 
 export default {
     name: 'App',
+    metaInfo: {
+        title: 'Shop',
+        titleTemplate: '%s | Dashboard',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
     mounted () {
         this.getDashboardMatrix()
         this.getDashboard()
@@ -105,7 +108,7 @@ export default {
         getDashboard () {
             const shop_id = this.shopId
             const payload = {
-                token: this.$session.get('tokenBearer'),
+                token: this.$cookies.get('tokenBearer'),
                 shop_id: shop_id,
             }
             this.getData(payload)
@@ -113,7 +116,7 @@ export default {
         getDashboardMatrix () {
             const shop_id = this.shopId
             const payload = {
-                token: this.$session.get('tokenBearer'),
+                token: this.$cookies.get('tokenBearer'),
                 shop_id: shop_id,
             }
             this.getMatrix(payload)

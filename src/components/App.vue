@@ -1,63 +1,76 @@
 <template>
     <div id="app">
+        <ReloadApp 
+            v-if="updateApplication" 
+            @closeReload="closeReload" 
+            @reloadApplication="reloadApplication" />
         <router-view />
     </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import ReloadApp from './ReloadApp'
 
 export default {
-    name: 'App',
+    name: 'app',
     data () {
         return {}
     },
-    mounted () {
-        const data = this.$session.get('user');
-        const token = this.$session.get('token');
-        if (data && token) {
-            // const payload = {
-            //     id: data.id,
-            //     name: data.name,
-            //     email: data.email,
-            //     token: token
-            // }
-            // this.$socket.emit('admin', payload)
-        }
+    components: {
+        ReloadApp
     },
     computed: {
         ...mapState({
-            // filterCategory: (state) => state.storeCategory.filter,
-        })
+            updateApplication: (state) => state.application.updateApplication,
+        }),
     },
     methods: {
         ...mapActions({
-            // setShop: 'storeSelectedShop/setSelectedData',
-            // getShop: 'storeSelectedShop/getData',
-            // getCategory: 'storeCategory/getData'
+            setUpdateApplication: 'application/setUpdateApplication',
         }),
-        // setShopData () {
-        //     const shop_id = this.$route.params.shopId
-        //     this.setShop(shop_id)
-        // },
-        // getShopData () {
-        //     const token = this.$session.get('tokenBearer')
-        //     this.getShop({ token })
-        // },
-        // getCategoryData () {
-        //     const token = this.$session.get('tokenBearer')
-        //     this.filterCategory.status = 'active'
-        //     this.getCategory({ token })
+        reloadApplication () {
+            this.setUpdateApplication(false)
+            window.location.reload()
+        },
+        closeReload () {
+            this.setUpdateApplication(false)
+        }
+    },
+    mounted () {
+        if (this.$workbox) {
+            this.$workbox.addEventListener("installed", (event) => {
+                if (event.isUpdate) {
+                    this.setUpdateApplication(true)
+                } else {
+                    this.setUpdateApplication(false)
+                }
+            })
+        }
+
+        // const data = this.$cookies.get('user');
+        // const token = this.$cookies.get('token');
+        // if (data && token) {
+        //     const payload = {
+        //         id: data.id,
+        //         name: data.name,
+        //         email: data.email,
+        //         token: token
+        //     }
+        //     this.$socket.emit('admin', payload)
         // }
     },
-    sockets: {
-        connect: function () {
-            this.$message('Connected to Socket')
-        },
-        disconnect: function () {
-            this.$message('You are disconnected')
-        },
-    }
+    // sockets: {
+    //     connect: function () {
+    //         this.$message('Your are connected')
+    //     },
+    //     disconnect: function () {
+    //         this.$message({
+    //             message: 'Your are disconnected',
+    //             type: 'error'
+    //         })
+    //     },
+    // }
 }
 </script>
 <style>

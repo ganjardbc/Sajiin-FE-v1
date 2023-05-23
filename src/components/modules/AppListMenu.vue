@@ -1,5 +1,5 @@
 <template>
-    <div id="AppListDownMenu">
+    <div id="AppListMenu">
         <ul :class="(isSidebarSmall 
                 ? 'content-scroll menu-list hover with-icon' 
                 : 'content-scroll menu-list hover with-big-icon ' + (enableGridView ? 'display-flex wrap' : '')
@@ -9,7 +9,7 @@
                 :key="index" 
                 :class="'ml-list ' + (enableGridView ? 'fixed-column-3' : '')"
             >
-                <router-link v-if="!dt.menu" :to="{name: dt.link}" class="ml-link" :title="dt.label">
+                <router-link v-if="!dt.menu" :to="{name: dt.link}" class="ml-link" :title="dt.label" exact>
                     <div class="ml-icon">
                         <i :class="dt.icon" />
                     </div>
@@ -31,7 +31,7 @@
                     <ul v-if="dt.menu.length > 0" class="subcontent">
                         <li v-for="(sb, index) in dt.menu" :key="index" class="ml-list" @click="onClick">
                             <router-link :to="{name: sb.link}" class="ml-link" :title="sb.label">
-                                <div class="ml-icon">
+                                <div class="ml-icon" exact>
                                     <i :class="sb.icon" />
                                 </div>
                                 <div class="ml-label">
@@ -52,7 +52,7 @@
 </template>
 <script>
 export default {
-    name: 'AppListDownMenu',
+    name: 'AppListMenu',
     data () {
         return {
             permissions: [],
@@ -60,7 +60,7 @@ export default {
         }
     },
     mounted() {
-        this.permissions = this.$session.get('permissions')
+        this.permissions = this.$cookies.get('permissions')
     },
     methods: {
         onClick () {
@@ -81,7 +81,7 @@ export default {
         onCheckPermission (prm) {
             let stt = false
             const data = this.permissions
-            data && data.map((dt) => {
+            data && data.length > 0 && data.map((dt) => {
                 if (dt.permission_name === prm) {
                     stt = true
                 }

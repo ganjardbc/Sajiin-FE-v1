@@ -57,7 +57,7 @@
                     </div>
 
                     <div class="field-group">
-                        <div class="field-label">Your Username</div>
+                        <div class="field-label">Create Username</div>
                         <el-input 
                             placeholder=""
                             type="text"
@@ -98,10 +98,20 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import logo from '@/assets/img/logo.png'
+import logo from '@/assets/img/Logo.png'
 
 export default {
     name: "Register",
+
+    metaInfo: {
+        title: 'SAJI-IN',
+        titleTemplate: '%s | Serve All You Want',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
+
     components: {},
 
     data () {
@@ -134,7 +144,6 @@ export default {
 
         onChangeEmail (data) {
             const email = data.split('@')
-            console.log('email', email)
             this.form.username = email[0]
         },
 
@@ -143,34 +152,42 @@ export default {
             if (res.data.status === 'ok') {
                 const data = res.data.data 
 
-                this.$session.set('token', data.token)
-                this.$session.set('tokenBearer', `Bearer ${data.token}`)
-                this.$session.set('user', data.user)
-                this.$session.set('role', data.role)
-                this.$session.set('shop', data.shop)
-                this.$session.set('employee', data.employee)
-                this.$session.set('permissions', data.permissions)
+                this.$cookies.set('token', data.token)
+                this.$cookies.set('tokenBearer', `Bearer ${data.token}`)
+                this.$cookies.set('user', data.user)
+                this.$cookies.set('role', data.role)
+                this.$cookies.set('shop', data.shop)
+                this.$cookies.set('employee', data.employee)
+                this.$cookies.set('permissions', JSON.stringify(data.permissions))
 
                 if (data.user.role_name === 'admin') {
-                    this.$router.replace({ name: 'admin-home' })
-                } else {
-                    this.$router.replace({ name: 'owner-home' })
+                    window.location = '/admin/home'
+                }
+                else if (data.user.role_name === 'owner') {
+                    window.location = '/owner/home'
+                }
+                else {
+                    window.location = '/employee/home'
                 }
             }
         }
     },
 
-    beforeCreate: function () {
-        if (this.$session.get('token')) 
-        {
-            const roleName = this.$session.get('user').role_name
-            if (roleName === 'admin') {
-                this.$router.replace({ name: 'admin-home' })
-            } else {
-                this.$router.replace({ name: 'owner-home' })
-            }
-        }
-    }
+    // beforeMount: function () {
+    //     if (this.$cookies.get('token')) 
+    //     {
+    //         const user = this.$cookies.get('user')
+    //         if (user.role_name === 'admin') {
+    //             window.location = '/admin/home'
+    //         }
+    //         else if (user.role_name === 'owner') {
+    //             window.location = '/owner/home'
+    //         }
+    //         else {
+    //             window.location = '/employee/home'
+    //         }
+    //     }
+    // }
 }
 
 </script>

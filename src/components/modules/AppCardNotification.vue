@@ -4,7 +4,9 @@
             placement="bottom-end"
             width="250"
             trigger="click">
-            <div>Notification</div>
+            <div class="width width-100">
+                <AppEmpty />
+            </div>
             <button 
                 slot="reference"
                 class="btn btn-white btn-icon btn-circle">
@@ -14,7 +16,11 @@
     </div>
 </template>
 <script>
+import AppEmpty from './AppEmpty'
 export default {
-    name: 'App'
+    name: 'App',
+    components: {
+        AppEmpty
+    }
 }
 </script>

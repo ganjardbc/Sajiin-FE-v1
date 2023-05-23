@@ -2,47 +2,9 @@
     <div id="App">
         <AppSideForm 
             :title="title" 
+            :subtitle="form.order_id"
             :enableCustomFooter="true"
             :onClose="onClose">
-            <div class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px">
-                <div class="display-flex">
-                    <div style="width: calc(100% - 75px);">
-                        <div class="fonts fonts-11 semibold" style="margin-bottom: 10px;">{{ form.shop_name ? form.shop_name : '-' }}</div>
-                        <div class="margin margin-bottom-15px">
-                            <div class="fonts fonts-10 grey">
-                                Table
-                            </div>
-                            <div class="fonts fonts-10 semibold black">
-                                {{ form.table_name ? form.table_name : '-' }}
-                            </div>
-                        </div>
-                        <div>
-                            <div class="fonts fonts-10 grey">
-                                Customer
-                            </div>
-                            <div class="fonts fonts-10 semibold black">
-                                {{ form.customer_name ? form.customer_name : '-' }}
-                            </div>
-                        </div>
-                    </div>
-                    <div style="width: 75px;">
-                        <div class="image image-padding image-radius">
-                            <img v-if="form.shop_image" :src="shopImageThumbnailUrl + form.shop_image" alt="">
-                            <i v-else class="post-middle-absolute fa fa-lg fa-store" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px">
-                <div class="fonts fonts-11 semibold black padding padding-bottom-5px">
-                    Table
-                </div>
-                <div>
-                    <Table />
-                </div>
-            </div>
-
             <div class="card bg-white box-shadow margin margin-bottom-15px margin-top-15px">
                 <div class="display-flex space-between align-center padding padding-bottom-10px">
                     <div class="fonts fonts-11 semibold black">
@@ -55,17 +17,13 @@
                     <Payment />
                 </div>
                 <div class="display-flex space-between">
-                    <div class="fonts fonts-10 normal grey">Subtotal ({{ orderQuantity }} products)</div>
-                    <div class="fonts fonts-10 normal grey">{{ format(orderPrice) }}</div>
+                    <div class="fonts fonts-10 semibold black">Total ({{ form.total_item }} products)</div>
+                    <div class="fonts fonts-10 semibold main-color">{{ format(form.total_price) }}</div>
                 </div>
-                <div class="display-flex space-between">
+                <div v-if="isThereDiscount" class="padding padding-bottom-15px margin margin-bottom-15px border-bottom"></div>
+                <div v-if="isThereDiscount" class="display-flex space-between">
                     <div class="fonts fonts-10 normal grey">Discount</div>
-                    <div class="fonts fonts-10 normal grey">{{ format(0) }}</div>
-                </div>
-                <div class="padding padding-bottom-15px margin margin-bottom-15px border-bottom"></div>
-                <div class="display-flex space-between">
-                    <div class="fonts fonts-10 semibold black">Total</div>
-                    <div class="fonts fonts-10 semibold orange">{{ format(orderPrice) }}</div>
+                    <div class="fonts fonts-10 normal black">{{ format(totalDiscount) }}</div>
                 </div>
             </div>
 
@@ -75,12 +33,12 @@
                 </div>
                 <div class="field-group">
                     <div class="field-label">Bills Price</div>
-                    <el-input 
-                        placeholder="0"
-                        type="number"
-                        clearable
+                    <currency-input
+                        class="field field-sekunder"
+                        v-model="form.bills_price"
+                        :precision="0"
                         @change="onChangeBills"
-                        v-model="form.bills_price"></el-input>
+                    />
                     <div 
                         v-if="errorMessage.bills_price" 
                         class="field-error">
@@ -93,7 +51,7 @@
                 <div class="padding padding-bottom-7px margin margin-bottom-15px border-bottom"></div>
                 <div class="display-flex space-between">
                     <div class="fonts fonts-10 semibold black">Change</div>
-                    <div class="fonts fonts-10 semibold orange">{{ format(form.change_price) }}</div>
+                    <div class="fonts fonts-10 semibold main-color">{{ format(form.change_price) }}</div>
                 </div>
             </div>
 
@@ -102,7 +60,7 @@
                     <div class="field-group" style="padding-top: 0;">
                         <div class="field-label">Order Status</div>
                         <div class="display-flex space-between">
-                            <div class="fonts micro black">Make this order status as "Done" ?</div>
+                            <div class="fonts micro black">Mark this order status as "Done" ?</div>
                             <el-switch 
                                 v-model="form.status"
                                 :disabled="isButtonEnable"
@@ -114,7 +72,7 @@
                         class="btn btn-main btn-full"
                         :disabled="isButtonEnable"
                         @click="onCreateOrder">
-                        Create Order
+                        Save Order
                     </button>
                 </div>
             </div>
@@ -183,12 +141,33 @@ export default {
             })
             return price
         },
+        orderPriceBeforeDiscount () {
+            let price = 0
+            this.details && this.details.map((item) => {
+                let quantity = item.quantity
+                if (item.is_discount) {
+                    price += quantity * item.second_price
+                } else {
+                    price += quantity * item.price
+                }
+            })
+            return price
+        },
+        totalDiscount () {
+            return this.orderPriceBeforeDiscount - this.orderPrice
+        },
+        isThereDiscount () {
+            let status = false
+            this.details && this.details.map((item) => {
+                if (item.is_discount) {
+                    status = true 
+                }
+            })
+            return status
+        },
         isButtonEnable () {
             let status = false 
             if (!this.form.payment_id) {
-                status = true 
-            }
-            if (!this.form.table_id) {
                 status = true 
             }
             if (!this.form.bills_price) {

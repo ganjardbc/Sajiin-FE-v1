@@ -17,7 +17,13 @@
             </el-table-column>
             <el-table-column
                 prop="description"
-                label="Description">
+                label="Description"
+                min-width="180">
+            </el-table-column>
+            <el-table-column
+                prop="type"
+                label="Type"
+                min-width="180">
             </el-table-column>
             <el-table-column 
                 label="Status"

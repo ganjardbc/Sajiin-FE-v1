@@ -3,7 +3,7 @@
         id="App" 
         :class="formClass ? 'content-form' : 'content-form hide'">
         <div class="left">
-            <div class="display-flex space-between display-mobile margin margin-bottom-5px">
+            <div class="display-flex space-between display-mobile margin margin-bottom-15px">
                 <div class="width width-75 width-mobile display-flex space-between">
                     <h1 class="fonts big black bold">Products</h1>
                     <div class="display-flex">
@@ -13,6 +13,7 @@
                             <i class="fa fa-lw fa-retweet"></i>
                         </button>
                         <button 
+                            v-if="isRoleOwner"
                             class="btn btn-icon btn-white" 
                             @click="onCreate">
                             <i class="fa fa-lw fa-plus" />
@@ -25,6 +26,27 @@
                         :enableResponsive="true" 
                         :onChange="(data) => onSearch(data)" />
                 </div>
+            </div>
+
+            <el-alert 
+                v-if="!isRoleOwner"
+                title="Create New Products ?"
+                description="To create new products please contact your Owner."
+                type="warning"
+                :closable="true"
+                show-icon
+                style="margin: 10px 0 20px 0;">
+            </el-alert>
+
+            <div class="display-flex space-between align-center display-mobile margin margin-bottom-15px">
+                <AppTabs 
+                    class="width width-300px width-mobile"
+                    :selectedIndex.sync="selectedIndex" 
+                    :isFull="true"
+                    :isScrollable="false"
+                    :data="tabs" 
+                    :onChange="(data) => onChangeTabs(data)"
+                />
             </div>
 
             <div class="width width-100">
@@ -104,14 +126,29 @@ import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../modules/AppFileUpload'
+import AppTabs from '../../../modules/AppTabs'
 import SearchField from '../../../modules/SearchField'
 import Form from './Form'
 import Card from './Card'
 
+const tabs = [
+    {id: 1, label: 'Active', status: 'active'},
+    {id: 2, label: 'Inactive', status: ''},
+]
+
 export default {
     name: 'App',
+    metaInfo: {
+        title: 'Shop',
+        titleTemplate: '%s | Products',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
     data () {
         return {
+            tabs: tabs,
             formClass: false,
             visibleUpdateCover: false,
             visibleAlert: false,
@@ -121,11 +158,12 @@ export default {
             visibleConfirmedDelete: false,
             titleConfirmed: 'Save this data ?',
             currentPage: 0,
+            selectedIndex: 0,
         }
     },
     mounted () {
         this.getCategoryData()
-        this.getData()
+        this.onChangeTabs(0)
     },
     components: {
         AppEmpty,
@@ -133,6 +171,7 @@ export default {
         AppPopupConfirmed,
         AppPopupAlert,
         AppFileUpload,
+        AppTabs,
         SearchField,
         Form,
         Card,
@@ -160,10 +199,19 @@ export default {
         shopId () {
             return this.$store.state.storeSelectedShop.selectedData
         },
+        isRoleOwner () {
+            let status = false 
+            const user = this.$cookies.get('user')
+            if (user.role_name === 'owner') {
+                status = true
+            }
+            return status
+        },
     },
     watch: {
         shopId (prevProps, nextProps) {
             if (prevProps !== nextProps) {
+                this.getCategoryData()
                 this.getData()
             }
         }
@@ -195,16 +243,37 @@ export default {
         onRefresh () {
             this.getData()
         },
+        onChangeTabs (data) {
+            this.selectedIndex = data
+            switch (this.selectedIndex) {
+                case 0:
+                    this.filter.status = 'active'
+                    break
+                case 1:
+                    this.filter.status = 'inactive'
+                    break
+            }
+            this.handleFilterSearch()
+        },
 
         // LIST DATA
         getCategoryData () {
-            const token = this.$session.get('tokenBearer')
-            this.getCategory({ token })
+            const token = this.$cookies.get('tokenBearer')
+            const shop_id = this.shopId 
+            if (shop_id) {
+                this.getCategory({ 
+                    token, 
+                    shop_id: shop_id,
+                    type: 'employee'
+                })
+            }
         },
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             const shop_id = this.shopId
-            this.getproduct({ token, shop_id })
+            if (shop_id) {
+                this.getproduct({ token, shop_id })
+            }
         },
         handleCurrentChange (value) {
             this.setPagination(value)
@@ -226,7 +295,7 @@ export default {
         },
         onClickYes () {
             this.visibleConfirmed = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             switch (this.typeForm) {
                 case 'create':
                     this.createData({
@@ -238,8 +307,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to save this product'
+                            this.$message({
+                                message: 'Failed to save this product',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -253,8 +324,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to edit this product'
+                            this.$message({
+                                message: 'Failed to edit this product',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -308,7 +381,7 @@ export default {
         },
         onClickYesDelete () {
             this.visibleConfirmedDelete = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.deleteData({
                 ...this.form,
                 token: token
@@ -336,7 +409,7 @@ export default {
         },
         onUpdateCover (data) {
             this.visibleUpdateCover = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.uploadCover({
                 ...this.form,
                 image: data,
@@ -355,32 +428,38 @@ export default {
         // STATUS
         onChangeProductStatus (data) {
             this.setFormData(data)
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.updateData({
                 ...this.form,
                 token: token
             }).then((res) => {
                 const status = res.data.status 
                 if (status === 'ok') {
-                    this.$message(`Success changed status for product ${data.name}.`);
+                    this.$message(`Success changed status for product ${data.name}.`)
                 } else {
-                    this.$message(`Failed to change status for product ${data.name}.`);
+                    this.$message({
+                        message: `Failed to change status for product ${data.name}.`,
+                        type: 'error'
+                    });
                 }
             })
         },
         onChangeVarianStatus (data) {
             this.setLoadingForm(true)
             this.setFormDataVarian(data)
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.updateDataVarian({
                 ...this.formVarian,
                 token: token
             }).then((res) => {
                 const status = res.data.status 
                 if (status === 'ok') {
-                    this.$message(`Success changed status for varian ${data.name}.`);
+                    this.$message(`Success changed status for varian ${data.name}.`)
                 } else {
-                    this.$message(`Failed to change status for varian ${data.name}.`);
+                    this.$message({
+                        message: `Failed to change status for varian ${data.name}.`,
+                        type: 'error'
+                    });
                 }
             }).finally(() => {
                 this.setLoadingForm(false)

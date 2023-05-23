@@ -53,11 +53,24 @@ export default {
             status: '',
         },
         role: {
-            limit: 10,
+            limit: 1000,
             offset: 0,
             totalRecord: 0,
             loading: false,
             data: [],
+            filter: {
+                search: '',
+                status: 'active',
+            },
+        },
+        employee: {
+            limit: 1000,
+            offset: 0,
+            totalRecord: 0,
+            data: [],
+            loading: false,
+            loadMore: false,
+            loadingForm: false,
             filter: {
                 search: '',
                 status: 'active',
@@ -107,6 +120,8 @@ export default {
         SET_TOTAL_RECORD (state, value) {
             state.totalRecord = value
         },
+
+        // ROLE
         SET_ROLE_LOADING (state, value) {
             state.role.loading = value
         },
@@ -115,6 +130,23 @@ export default {
         },
         SET_ROLE_DATA (state, value) {
             state.role.data = value
+        },
+
+        // EMPLOYEE
+        SET_EMPLOYEE_LOADING (state, value) {
+            state.employee.loading = value
+        },
+        SET_EMPLOYEE_LOAD_MORE (state, value) {
+            state.employee.loadMore = value
+        },
+        SET_EMPLOYEE_LOADING_FORM (state, value) {
+            state.employee.loadingForm = value 
+        },
+        SET_EMPLOYEE_DATA (state, value) {
+            state.employee.data = value
+        },
+        SET_EMPLOYEE_TOTAL_RECORD (state, value) {
+            state.employee.totalRecord = value
         },
     },
 
@@ -259,6 +291,8 @@ export default {
                     commit('SET_LOADING_FORM', false)
                 })
         },
+
+        // ROLE
         getDataRole ({ commit, state }, data) {
             commit('SET_ROLE_LOADING', true)
 
@@ -291,6 +325,42 @@ export default {
                 })
                 .finally(() => {
                     commit('SET_ROLE_LOADING', false)
+                })
+        },
+
+        // EMPLOYEE
+        getDataEmployee ({ commit, state }, data) {
+            commit('SET_EMPLOYEE_LOADING', true)
+
+            let dataPrev = []
+
+            const params = {
+                limit: state.employee.limit,
+                offset: state.employee.offset,
+                search: state.employee.filter.search,
+                status: state.employee.filter.status,
+            }
+
+            return axios.post('/api/employee/getAll', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    const payload = res.data.data 
+
+                    payload && payload.map((dt) => {
+                        dataPrev.push({ ...dt })
+                    })
+
+                    commit('SET_EMPLOYEE_DATA', dataPrev)
+                    commit('SET_EMPLOYEE_TOTAL_RECORD', res.data.total_record)
+
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_EMPLOYEE_LOADING', false)
                 })
         },
     }

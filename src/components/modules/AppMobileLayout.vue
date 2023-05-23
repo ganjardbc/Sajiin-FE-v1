@@ -1,25 +1,22 @@
 <template>
-    <div id="AppMobileLayout" class="card-full-popup">
+    <div id="AppMobileLayout">
         <div class="navbar-header">
             <div class="navbar-header-content">
-                <div class="display-flex">
-                    <button class="btn btn-icon btn-white" @click="onBack">
+                <div v-if="!enableLeftSlot" class="display-flex align-center">
+                    <button class="btn btn-icon btn-circle btn-white margin margin-right-10px" @click="onBack">
                         <i class="fa fa-lg fa-arrow-left"></i>
                     </button>
-                    <div style="margin-left: 10px; margin-right: 10px;">
-                        <div class="post-top">
-                            <div class="fonts fonts-12 semibold black">
-                                {{ title ? title : 'Title' }}
-                            </div>
-                        </div>
-                    </div>
-                    <div style="position: absolute; right: 10px;">
-                        <slot name="right-button" />
-                    </div>
+                    <div class="fonts fonts-11 semibold black">{{ title ? title : 'Title' }}</div>
+                </div>
+                <div v-if="enableLeftSlot" class="display-flex align-center">
+                    <slot name="left-button" />
+                </div>
+                <div class="display-flex flex-end align-center">
+                    <slot name="right-button" />
                 </div>
             </div>
         </div>
-        <div class="main-screen" id="body">
+        <div>
             <slot />
         </div>
     </div>
@@ -32,6 +29,7 @@ export default {
             type: String,
             required: false
         },
+        enableLeftSlot: false,
     },
     methods: {
         onBack () {

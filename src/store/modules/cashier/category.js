@@ -77,11 +77,23 @@ export default {
 
             let dataPrev = []
 
-            const params = {
+            let params = {
                 limit: state.limit,
                 offset: state.offset,
                 search: state.filter.search,
                 status: state.filter.status,
+            }
+
+            if (data.type === 'owner') {
+                params = {
+                    ...params,
+                    user_id: data.user_id
+                }
+            } else {
+                params = {
+                    ...params,
+                    shop_id: data.shop_id
+                }
             }
 
             return axios.post('/api/category/getAll', params, { 

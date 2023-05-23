@@ -19,7 +19,10 @@ const defaultForm = () => {
         open_time: '',
         close_time: '',
         status: '',
-        is_available: ''
+        is_available: '',
+        is_digital_menu_active: '',
+        is_digital_order_active: '',
+        is_opened: '',
     }
 }
 
@@ -138,6 +141,28 @@ export default {
                         commit('SET_LOAD_MORE', true)
                     }
 
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_LOADING', false)
+                })
+        },
+        getByID ({ commit, state }, data) {
+            commit('SET_LOADING', true)
+
+            const params = {
+                shop_id: data.shop_id,
+            }
+
+            return axios.post('/api/shop/getByID', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    const payload = res.data.data 
+                    commit('SET_FORM_DATA', payload.shop)
                     return res
                 })
                 .catch((e) => {

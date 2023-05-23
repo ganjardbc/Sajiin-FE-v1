@@ -65,6 +65,16 @@
 .post-middle-absolute {
 	@include post_center(absolute);
 }
+.post-top-right-absolute {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.post-top-left-absolute {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
 
 .post-center {
 	@include post_top(relative);

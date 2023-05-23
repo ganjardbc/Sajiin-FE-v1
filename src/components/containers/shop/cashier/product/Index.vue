@@ -1,8 +1,8 @@
 <template>
     <div id="App">
         <div class="display-flex space-between display-mobile margin margin-bottom-5px">
-            <div class="width width-70 width-mobile display-flex space-between">
-                <h1 class="fonts big black bold">Cashier</h1>
+            <div class="width width-70 width-mobile display-flex space-between align-center">
+                <div class="fonts small black bold">Products</div>
                 <div class="display-flex">
                     <button 
                         class="btn btn-icon btn-white" 
@@ -123,13 +123,18 @@ export default {
 
         // LIST DATA
         getDataProduct () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             const shop_id = this.shopId
-            this.getProduct({ token, shop_id })
+            if (shop_id) {
+                this.getProduct({ token, shop_id })
+            }
         },
         getDataCategory () {
-            const token = this.$session.get('tokenBearer')
-            this.getCategory({ token })
+            const token = this.$cookies.get('tokenBearer')
+            const shop_id = this.shopId
+            if (shop_id) {
+                this.getCategory({ token, shop_id })
+            }
         }
     }
 }

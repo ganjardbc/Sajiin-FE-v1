@@ -61,7 +61,7 @@
 
                 <div class="display-flex space-between" style="margin-bottom: 10px;">
                     <div class="width width-70">
-                        <div class="fonts fonts-10 grey">Product(s)</div>
+                        <div class="fonts fonts-10 grey">Products</div>
                     </div>
                     <div class="width width-30">
                         <div class="fonts fonts-10 grey">Price</div>
@@ -71,7 +71,7 @@
                 <div v-for="(dt, index) in data.details" :key="index" class="display-flex space-between" style="margin-bottom: 15px;">
                     <div class="width width-70 display-flex">
                         <div style="width: 60px; margin-right: 15px;">
-                            <div class="image image-padding">
+                            <div class="image image-padding border-full">
                                 <img :src="productImageThumbnailUrl + dt.product_image" alt="" class="post-center">
                             </div>
                         </div>

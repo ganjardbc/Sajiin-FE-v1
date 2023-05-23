@@ -37,9 +37,6 @@
                             </router-link>
                         </div>
                         <div class="header-content-main-right">
-                            <div class="display-flex align-center padding padding-right-10px margin margin-right-10px border-right">
-                                <AppCardNotification />
-                            </div>
                             <AppCardProfile :data.sync="dataUser" />
                         </div>
                     </div>
@@ -64,7 +61,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import VueLoadImage from 'vue-load-image'
-import logo from '@/assets/img/logo.png'
+import logo from '@/assets/img/Logo.png'
 import icon from '@/assets/img/icon.png'
 import AppListMenu from '../../modules/AppListMenu'
 import AppToast from '../../modules/AppToast'
@@ -74,13 +71,14 @@ import AppCardProfile from '../../modules/AppCardProfile'
 
 const defaultSidebar = [
     {
-        icon: 'fa fa-lg fa-database', label: 'DASHBOARD', value: 0, disableMenu: true, menu: [
-            {icon: 'fa fa-lg fa-store', label: 'Visit My Shop', value: 0, link: 'owner-home', permission: 'dashboard'},
+        icon: 'fa fa-lg fa-database', label: 'MASTERDATA', value: 0, disableMenu: false, menu: [
+            {icon: 'fa fa-lg fa-list', label: 'Bizpars', value: 0, link: 'admin-bizpars', permission: 'bizpars'},
+            {icon: 'fa fa-lg fa-calculator', label: 'Payments', value: 0, link: 'admin-payments', permission: 'payments'},
+            // {icon: 'fa fa-lg fa-building', label: 'Positions', value: 0, link: 'admin-positions', permission: 'employees'},
         ]
     },
     {
-        icon: 'fa fa-lg fa-database', label: 'MASTERDATA', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-list', label: 'Bizpars', value: 0, link: 'admin-bizpars', permission: 'bizpars'},
+        icon: 'fa fa-lg fa-database', label: 'USER', value: 0, disableMenu: false, menu: [
             {icon: 'fa fa-lg fa-key', label: 'Permissions', value: 0, link: 'admin-permissions', permission: 'permissions'},
             {icon: 'fa fa-lg fa-flag', label: 'Roles', value: 0, link: 'admin-roles', permission: 'roles'},
             {icon: 'fa fa-lg fa-users', label: 'Users', value: 0, link: 'admin-users', permission: 'users'},
@@ -88,18 +86,17 @@ const defaultSidebar = [
     },
     {
         icon: 'fa fa-lg fa-database', label: 'SHOP', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-calculator', label: 'Payments', value: 0, link: 'admin-payments', permission: 'payments'},
-            {icon: 'fa fa-lg fa-box-open', label: 'Shipments', value: 0, link: 'admin-shipments', permission: 'shipments'},
+            {icon: 'fa fa-lg fa-store', label: 'Shops', value: 0, link: 'admin-shops', permission: 'shops'},
         ]
     },
     {
-        icon: 'fa fa-lg fa-database', label: 'PRODUCT', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-list-ol', label: 'Categories', value: 0, link: 'admin-categories', permission: 'categories'},
+        icon: 'fa fa-lg fa-database', label: 'EMPLOYEE', value: 0, disableMenu: false, menu: [
+            {icon: 'fa fa-lg fa-clock', label: 'Shifts', value: 0, link: 'admin-shifts', permission: 'employees'},
+            {icon: 'fa fa-lg fa-users', label: 'Employees', value: 0, link: 'admin-employees', permission: 'employees'},
         ]
     },
     {
-        icon: 'fa fa-lg fa-database', label: 'PROFILE', value: 0, disableMenu: false, menu: [
-            {icon: 'fa fa-lg fa-user', label: 'Profile', value: 0, link: 'admin-profile', permission: 'profile'},
+        icon: 'fa fa-lg fa-database', label: 'SETTING', value: 0, disableMenu: false, menu: [
             {icon: 'fa fa-lg fa-cogs', label: 'Settings', value: 0, link: 'admin-settings', permission: 'settings'},
         ]
     },
@@ -117,10 +114,10 @@ export default {
         }
     },
     beforeMount (){
-        if (!this.$session.get('token')) {
+        if (!this.$cookies.get('token')) {
             this.$router.push({ name: 'login' })
         }
-        if (this.$session.get('token')) {
+        if (this.$cookies.get('token')) {
             this.userData()
         }
     },
@@ -163,7 +160,7 @@ export default {
             }
             this.setToast(payload)
         },
-        makeMultipleToast (title, subtitle) {
+        makeMultipleToast (title, subtitle) { 
             const time = new Date().getTime()
             const payload = {
                 id: time,
@@ -173,21 +170,32 @@ export default {
             }
             this.setMultipleToast(payload)
         },
-        async userData () {
-            const token = this.$session.get('tokenBearer')
-            const res = await this.getUserData(token)
-            if (res.data.status === 'ok') {
+        userData () {
+            const token = this.$cookies.get('tokenBearer')
+            this.getUserData(token).then((res) => {
                 const data = res.data.data 
 
-                this.$session.set('user', data.user)
-                this.$session.set('role', data.role)
-                this.$session.set('shop', data.shop)
-                this.$session.set('employee', data.employee)
-                this.$session.set('permissions', data.permissions)
-            }
+                this.$cookies.set('user', data.user)
+                this.$cookies.set('role', data.role)
+                this.$cookies.set('shop', data.shop)
+                this.$cookies.set('employee', data.employee)
+                this.$cookies.set('permissions', JSON.stringify(data.permissions))
+            }).catch(() => {
+                this.$cookies.remove('token')
+                this.$cookies.remove('tokenBearer')
+                this.$cookies.remove('user')
+                this.$cookies.remove('role')
+                this.$cookies.remove('shop')
+                this.$cookies.remove('employee')
+                this.$cookies.remove('permissions')
+                this.$cookies.remove('thermalStatus')
+                this.$cookies.remove('thermalUrl')
+
+                this.$router.replace({ name: 'login' })
+            })
         },
         getShopData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.getShop({ token })
         }
     },

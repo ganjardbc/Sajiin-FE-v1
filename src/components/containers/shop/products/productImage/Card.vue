@@ -8,7 +8,7 @@
                 <div style="width: calc(100% - 100px);">
                     <div class="fonts fonts-11 semibold">{{ dt.name }}</div>
                     <div class="fonts fonts-10 grey">Rp. {{ dt.price }}</div>
-                    <div class="fonts fonts-10 grey">{{ dt.created_at | moment("from", "now") }}</div>
+                    <div class="fonts fonts-10 grey">{{ dt.created_at | moment("DD MMMM YYYY") }}</div>
                 </div>
                 <div class="width width-100px display-flex flex-end">
                     <AppCardCapsule :data="dt.status" />

@@ -3,7 +3,7 @@
         id="App" 
         :class="formClass ? 'content-form' : 'content-form hide'">
         <div class="left">
-            <div class="display-flex space-between display-mobile margin margin-bottom-5px">
+            <div class="display-flex space-between display-mobile margin margin-bottom-15px">
                 <div class="width width-75 width-mobile display-flex space-between">
                     <h1 class="fonts big black bold">Tables</h1>
                     <div class="display-flex">
@@ -13,6 +13,7 @@
                             <i class="fa fa-lw fa-retweet"></i>
                         </button>
                         <button 
+                            v-if="isRoleOwner"
                             class="btn btn-icon btn-white" 
                             @click="onCreate">
                             <i class="fa fa-lw fa-plus" />
@@ -27,6 +28,27 @@
                 </div>
             </div>
 
+            <el-alert 
+                v-if="!isRoleOwner"
+                title="Create New Tables ?"
+                description="To create new tables please contact your Owner."
+                type="warning"
+                :closable="true"
+                show-icon
+                style="margin: 10px 0 20px 0;">
+            </el-alert>
+
+            <div class="display-flex space-between align-center display-mobile margin margin-bottom-15px">
+                <AppTabs 
+                    class="width width-300px width-mobile"
+                    :selectedIndex.sync="selectedIndex" 
+                    :isFull="true"
+                    :isScrollable="false"
+                    :data="tabs" 
+                    :onChange="(data) => onChangeTabs(data)"
+                />
+            </div>
+
             <div class="width width-100">
                 <div v-loading="loading">
                     <AppEmpty v-if="data.length === 0" />
@@ -36,7 +58,8 @@
                         @onDetail="onDetail"
                         @onEdit="onEdit"
                         @onDelete="onDelete"
-                        @onChangeStatus="onChangeStatus" />
+                        @onChangeStatus="onChangeStatus"
+                        @onQrCode="onOpenQrCode" />
                 </div>
                 <div class="width width-100 display-flex flex-end align-center padding padding-top-15px">
                     <div class="fonts fonts-10 normal black">Total {{ totalRecord }}</div>
@@ -56,7 +79,6 @@
 
         <div class="right">
             <Form 
-                :title="formTitle" 
                 @uploadImage="uploadImage"
                 @removeImage="removeImage"
                 @onSave="onOpenVisibleConfirmed"
@@ -90,6 +112,12 @@
                 @onClickOk="onClickOk"
             />
 
+            <AppPopupQrCode 
+                v-if="visibleQrCode"
+                :code="`${initUrl}/visitor/${paramShopId}/${form.table_id}`"
+                @onClose="onCloseQrCode"
+            />
+
             <AppPopupLoader 
                 v-if="loadingForm"
             />
@@ -104,28 +132,45 @@ import AppPopupLoader from '../../../modules/AppPopupLoader'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'
 import AppFileUpload from '../../../modules/AppFileUpload'
+import AppPopupQrCode from '../../../modules/AppPopupQrCode'
+import AppTabs from '../../../modules/AppTabs'
 import SearchField from '../../../modules/SearchField'
 import Form from './Form'
 import Card from './Card'
 
+const tabs = [
+    {id: 1, label: 'Active', status: 'active'},
+    {id: 2, label: 'Inactive', status: ''},
+]
+
 export default {
     name: 'App',
+    metaInfo: {
+        title: 'Shop',
+        titleTemplate: '%s | Tables',
+        htmlAttrs: {
+            lang: 'en',
+            amp: true
+        }
+    },
     data () {
         return {
-            formTitle: 'CREATE',
+            tabs: tabs,
             formClass: false,
             visibleUpdateCover: false,
             visibleAlert: false,
+            visibleQrCode: false,
             titleAlert: 'Failed to preceed data',
             iconAlert: 'fa fa-4x fa-info-circle',
             visibleConfirmed: false,
             visibleConfirmedDelete: false,
             titleConfirmed: 'Save this data ?',
             currentPage: 0,
+            selectedIndex: 0,
         }
     },
     mounted () {
-        this.getData()
+        this.onChangeTabs(0)
     },
     components: {
         AppEmpty,
@@ -133,6 +178,8 @@ export default {
         AppPopupConfirmed,
         AppPopupAlert,
         AppFileUpload,
+        AppPopupQrCode,
+        AppTabs,
         SearchField,
         Form,
         Card,
@@ -146,10 +193,30 @@ export default {
             limit: (state) => state.storeTable.limit,
             loading: (state) => state.storeTable.loading,
             loadingForm: (state) => state.storeTable.loadingForm,
+            typeForm: (state) => state.storeTable.typeForm,
         }),
+        typeForm: {
+            get () {
+                return this.$store.state.storeTable.typeForm
+            },
+            set (value) {
+                this.$store.state.storeTable.typeForm = value
+            }
+        },
         shopId () {
             return this.$store.state.storeSelectedShop.selectedData
-        }
+        },
+        paramShopId () {
+            return this.$route.params.shopId
+        },
+        isRoleOwner () {
+            let status = false 
+            const user = this.$cookies.get('user')
+            if (user.role_name === 'owner') {
+                status = true
+            }
+            return status
+        },
     },
     watch: {
         shopId (prevProps, nextProps) {
@@ -181,12 +248,26 @@ export default {
         onRefresh () {
             this.getData()
         },
+        onChangeTabs (data) {
+            this.selectedIndex = data
+            switch (this.selectedIndex) {
+                case 0:
+                    this.filter.status = 'active'
+                    break
+                case 1:
+                    this.filter.status = 'inactive'
+                    break
+            }
+            this.handleFilterSearch()
+        },
 
         // LIST DATA
         getData () {
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             const shop_id = this.shopId
-            this.getTable({ token, shop_id })
+            if (shop_id) {
+                this.getTable({ token, shop_id })
+            }
         },
         handleCurrentChange (value) {
             this.setPagination(value)
@@ -208,9 +289,9 @@ export default {
         },
         onClickYes () {
             this.visibleConfirmed = false 
-            const token = this.$session.get('tokenBearer')
-            switch (this.formTitle) {
-                case 'CREATE':
+            const token = this.$cookies.get('tokenBearer')
+            switch (this.typeForm) {
+                case 'create':
                     this.createData({
                         ...this.form,
                         token: token
@@ -220,12 +301,14 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to save this table'
+                            this.$message({
+                                message: 'Failed to save this table',
+                                type: 'error'
+                            })
                         }
                     })
                     break
-                case 'EDIT':
+                case 'edit':
                     this.updateData({
                         ...this.form,
                         token: token
@@ -235,8 +318,10 @@ export default {
                             this.formClass = false 
                             this.getData()
                         } else {
-                            this.visibleAlert = true 
-                            this.titleAlert = 'Failed to edit this table'
+                            this.$message({
+                                message: 'Failed to edit this table',
+                                type: 'error'
+                            })
                         }
                     })
                     break
@@ -246,11 +331,11 @@ export default {
         // SAVE
         onOpenVisibleConfirmed () {
             this.visibleConfirmed = true
-            switch (this.formTitle) {
-                case 'CREATE':
+            switch (this.typeForm) {
+                case 'create':
                     this.titleConfirmed = 'Save this table ?'
                     break
-                case 'EDIT':
+                case 'edit':
                     this.titleConfirmed = 'Edit this table ?'
                     break
             }
@@ -259,7 +344,7 @@ export default {
         // CREATE
         onCreate () {
             this.formClass = true
-            this.formTitle = 'CREATE'
+            this.typeForm = 'create'
             this.resetFormData()
             this.form.shop_id = this.shopId
         },
@@ -267,16 +352,15 @@ export default {
         // DETAIL
         onDetail (data) {
             this.formClass = true
-            this.formTitle = 'DETAIL'
+            this.typeForm = 'detail'
             this.resetFormData()
             this.setFormData(data)
-            console.log(data)
         },
 
         // EDIT
         onEdit (data) {
             this.formClass = true
-            this.formTitle = 'EDIT'
+            this.typeForm = 'edit'
             this.resetFormData()
             this.setFormData(data)
         },
@@ -291,7 +375,7 @@ export default {
         },
         onClickYesDelete () {
             this.visibleConfirmedDelete = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.deleteData({
                 ...this.form,
                 token: token
@@ -319,7 +403,7 @@ export default {
         },
         onUpdateCover (data) {
             this.visibleUpdateCover = false 
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.uploadCover({
                 ...this.form,
                 image: data,
@@ -338,7 +422,7 @@ export default {
         // STATUS
         onChangeStatus (data) {
             this.setFormData(data)
-            const token = this.$session.get('tokenBearer')
+            const token = this.$cookies.get('tokenBearer')
             this.updateData({
                 ...this.form,
                 token: token
@@ -350,6 +434,15 @@ export default {
                     this.$message(`Failed to change status for table ${data.name}.`);
                 }
             })
+        },
+
+        // QR CODE
+        onOpenQrCode (data) {
+            this.visibleQrCode = true 
+            this.setFormData(data)
+        },
+        onCloseQrCode () {
+            this.visibleQrCode = false 
         }
     }
 }

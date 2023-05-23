@@ -3,7 +3,7 @@
         <div v-for="(dt, i) in data" :key="i" class="card box-shadow bg-white" style="margin-top: 15px; margin-bottom: 15px; overflow: unset;">
             <div class="display-flex space-between" style="margin-bottom: 20px;">
                 <div class="display-flex">
-                    <div style="margin-right: 10px;"><i class="fa fa-1x fa-shopping-bag fonts orange"></i></div>
+                    <div style="margin-right: 10px;"><i class="fa fa-1x fa-shopping-bag fonts main-color"></i></div>
                     <div class="display-flex mobile-hidden">
                         <div class="fonts fonts-10 grey">{{ dt.order.created_at | moment("dddd, MMMM Do YYYY hh:mm") }}</div>
                         <AppDote style="margin-top: 8px;" />

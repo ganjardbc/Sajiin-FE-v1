@@ -2,17 +2,28 @@
     <div id="App">
         <AppSideForm 
             :title="title" 
-            :enableSaveButton="!isDetailForm"
+            :enableSaveButton="isButtonApplyEnable"
             :onSave="onSave"
             :onClose="onClose">
+            <div 
+                v-if="errorMessage.details && errorMessage.details[0]" 
+                class="padding padding-bottom-15px">
+                <el-alert
+                    title="Need Varians"
+                    description="You have to add at least one Varian(s)."
+                    type="error"
+                    :closable="false"
+                    show-icon>
+                </el-alert>
+            </div>
             <AppTabs 
-                v-if="!isCreateForm"
                 :selectedIndex.sync="selectedIndex" 
                 :data="tabs" 
+                :isFull="true"
                 :onChange="(data) => onChangeTabs(data)"
                 class="margin margin-bottom-20px" />
             <FormData v-if="selectedIndex === 0" />
-            <ProductDetail v-if="selectedIndex === 1" />
+            <ProductVarian v-if="selectedIndex === 1" />
         </AppSideForm>
     </div>
 </template>
@@ -20,10 +31,11 @@
 <script>
 import { mapState } from 'vuex'
 import AppSideForm from '../../../modules/AppSideForm'
+import AppEmpty from '../../../modules/AppEmpty'
 import AppImage from '../../../modules/AppImage'
 import AppTabs from '../../../modules/AppTabs'
 import FormData from './FormData'
-import ProductDetail from './productDetail/Index'
+import ProductVarian from './productVarian/Index'
 
 const tabs = [
     {id: 1, label: 'Data', status: 'active'},
@@ -34,7 +46,7 @@ export default {
     name: 'App',
     data () {
         return {
-            selectedIndex: 0,
+            selectedIndex: 1,
             tabs: tabs,
         }
     },
@@ -90,15 +102,26 @@ export default {
             }
             return status
         },
+        isButtonApplyEnable () {
+            let status = false 
+            if (!this.isDetailForm) {
+                if (this.form.category_id && this.form.name && this.form.description && this.form.details.length > 0) {
+                    status = true 
+                }
+            }
+
+            return status
+        },
         getCover () {
             return this.form.image ? this.productImageThumbnailUrl + this.form.image : ''
         }
     },
     components: {
+        AppEmpty,
         AppSideForm,
         AppImage,
         AppTabs,
-        ProductDetail,
+        ProductVarian,
         FormData,
     },
     methods: {

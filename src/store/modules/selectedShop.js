@@ -133,10 +133,6 @@ export default {
                     commit('SET_DATA', dataPrev)
                     commit('SET_TOTAL_RECORD', res.data.total_record)
 
-                    // if (dataPrev.length > 0) {
-                    //     commit('SET_SELECTED_DATA', dataPrev[0].id)
-                    // }
-
                     if (payload.length < state.limit) {
                         commit('SET_LOAD_MORE', false)
                     } else {

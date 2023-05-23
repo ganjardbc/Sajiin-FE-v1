@@ -4,6 +4,20 @@ const defaultDayLists = () => {
     return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 }
 
+const defaultMessage = () => {
+    return {
+        id: '',
+        table_id: '',
+        code: '',
+        image: '',
+        name: '',
+        status: '',
+        is_available: '',
+        description: '',
+        shop_id: ''
+    }
+}
+
 const defaultForm = () => {
     return {
         id: '',
@@ -11,7 +25,7 @@ const defaultForm = () => {
         code: '',
         image: '',
         name: '',
-        status: 'active',
+        status: '',
         is_available: 0,
         description: '',
         shop_id: ''
@@ -23,7 +37,7 @@ export default {
 
     state: {
         form: defaultForm(),
-        errorMessage: defaultForm(),
+        errorMessage: defaultMessage(),
         dayLists: defaultDayLists(),
         limit: 10,
         offset: 0,
@@ -35,7 +49,7 @@ export default {
         data: [],
         filter: {
             search: '',
-            status: '',
+            status: 'active',
         }
     },
 
@@ -43,7 +57,7 @@ export default {
 
     mutations: {
         RESET_ERROR_MESSAGE (state) {
-            state.errorMessage = defaultForm()
+            state.errorMessage = defaultMessage()
         },
         SET_LOADING (state, value) {
             state.loading = value
@@ -64,7 +78,7 @@ export default {
             if (value) {
                 state.errorMessage = value 
             } else {
-                state.errorMessage = defaultForm() 
+                state.errorMessage = defaultMessage() 
             }
         },
         SET_FORM_DATA (state, value) {

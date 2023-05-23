@@ -23,21 +23,19 @@
                             class="btn btn-sekunder btn-small-icon btn-circle" 
                             style="position: absolute; bottom: 5px; right: 5px;" 
                             @click="onChangeCover(scope.row.shop)">
-                            <i class="post-center fonts fonts-11 grey fa fa-lg fa-camera" />
+                            <i class="post-middle-absolute fonts fonts-11 grey fa fa-lg fa-camera" />
                         </button>
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column
-                label="Name"
-                width="180">
+            <el-table-column label="Name" min-width="200">
                 <template slot-scope="scope">
                     <span>{{ scope.row.shop.name }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="Location">
+            <el-table-column label="Owner" min-width="200">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.shop.location }}</span>
+                    <span>{{ scope.row.owner.name }}</span>
                 </template>
             </el-table-column>
             <el-table-column 
@@ -102,7 +100,7 @@ export default {
     },
     computed: {
         ...mapState({
-            offset: (state) => state.storeShop.offset,
+            offset: (state) => state.storeShopAdmin.offset,
         })
     },
     methods: {

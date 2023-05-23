@@ -6,7 +6,7 @@
             class="display-flex" 
             style="padding-top: 10px; padding-bottom: 10px;">
             <div style="width: 80px; margin-right: 15px;">
-                <div class="image image-padding">
+                <div class="image image-padding border-full">
                     <img :src="productImageThumbnailUrl + detail.product_image" alt="" class="post-center">
                 </div>
             </div>

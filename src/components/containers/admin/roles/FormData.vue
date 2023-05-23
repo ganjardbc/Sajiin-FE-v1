@@ -42,13 +42,34 @@
                     {{ errorMessage.description && errorMessage.description[0] }}
                 </div>
             </div>
+            <div class="field-group">
+                <div class="field-label">Type</div>
+                <el-select 
+                    v-model="form.type" 
+                    placeholder="Select"
+                    no-data-text="No Data Disaplayed"
+                    :disabled="isDetailForm"
+                    clearable>
+                    <el-option
+                        v-for="(item, i) in typeLists"
+                        :key="i"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+                <div 
+                    v-if="errorMessage.type" 
+                    class="field-error">
+                    {{ errorMessage.type && errorMessage.type[0] }}
+                </div>
+            </div>
         </div>
         <div class="margin margin-bottom-0px">
             <div class="fonts fonts-13 black semibold">Configuration</div>
             <div class="field-group">
                 <div class="field-label">Status</div>
                 <div class="display-flex space-between">
-                    <div class="fonts micro black">Is this role still active ?</div>
+                    <div class="fonts micro black">Is this role {{ form.status === 'active' ? 'Inactive' : 'Active' }} ?</div>
                     <el-switch 
                         v-model="form.status"
                         :disabled="isDetailForm"
@@ -73,6 +94,7 @@ export default {
             form: (state) => state.storeRoles.form,
             errorMessage: (state) => state.storeRoles.errorMessage,
             typeForm: (state) => state.storeRoles.typeForm,
+            typeLists: (state) => state.storeRoles.typeLists,
         }),
         isDetailForm () {
             let status = false 

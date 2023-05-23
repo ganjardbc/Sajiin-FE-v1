@@ -14,6 +14,7 @@ const defaultMessage = () => {
         status: '',
         type: '',
         note: '',
+        cashier_name: '',
         customer_name: '',
         shop_name: '',
         table_name: '',
@@ -25,7 +26,8 @@ const defaultMessage = () => {
         table_id: '',
         address_id: '',
         shipment_id: '',
-        payment_id: ''
+        payment_id: '',
+        cashbook_id: ''
     }
 }
 
@@ -43,6 +45,7 @@ const defaultOrder = () => {
         status: 'new-order',
         type: 'dine-in',
         note: '',
+        cashier_name: '',
         customer_name: '',
         shop_name: '',
         table_name: '',
@@ -54,7 +57,8 @@ const defaultOrder = () => {
         table_id: '',
         address_id: '',
         shipment_id: '',
-        payment_id: ''
+        payment_id: '',
+        cashbook_id: ''
     }
 }
 
@@ -116,32 +120,53 @@ export default {
         SET_MESSAGE_DATA (state, data) {
             state.errorMessage = data 
         },
+        SET_DATA (state, data) {
+            state.data = data
+        },
         RESET_ORDER (state) {
             state.form = defaultForm()
         },
         ADD_PRODUCT (state, data) {
-            const currentProduct = state
-                .form
-                .details
-                .find((item) => (
-                    item.product_id === data.id && 
-                    item.proddetail_id === data.varian.id 
-                ))
+            let currentProduct = undefined 
+            if (data.varian) {
+                currentProduct = state
+                    .form
+                    .details
+                    .find((item) => (
+                        item.product_id === data.id && 
+                        item.proddetail_id === data.varian.id 
+                    ))
+            } else {
+                currentProduct = state
+                    .form
+                    .details
+                    .find((item) => (
+                        item.product_id === data.id && 
+                        item.proddetail_id === null
+                    ))
+            }
             if (currentProduct === undefined) {
                 const quantity = 1
-                const price = data.varian.price
+                const price = data.varian ? data.varian.price : data.price
+                const secondPrice = data.varian ? data.varian.second_price : 0
+                const discount = data.varian ? data.varian.value_discount : 0
+                const isDiscount = data.varian ? data.varian.is_discount : 0
+                const productDetail = data.varian ? data.varian.name : null 
+                const productDetailId = data.varian ? data.varian.id : null
                 const subtotal = quantity * price
                 const payload = {
                     ...state.formProduct,
                     price: price,
-                    discount: 0,
+                    second_price: secondPrice,
+                    discount: discount,
+                    is_discount: isDiscount,
                     quantity: quantity,
                     subtotal: subtotal,
                     product_image: data.image,
                     product_name: data.name,
-                    product_detail: data.varian.name,
+                    product_detail: productDetail,
                     product_id: data.id,
-                    proddetail_id: data.varian.id,
+                    proddetail_id: productDetailId,
                     shop_id: data.shop_id,
                     status: "to-do"
                 }
@@ -154,13 +179,24 @@ export default {
                         let quantity = item.quantity
                         let price = item.price
                         let subtotal = quantity * price 
-                        if (
-                            item.product_id === data.id && 
-                            item.proddetail_id === data.varian.id
-                        ) {
-                            quantity = item.quantity + 1
-                            price = item.price
-                            subtotal = quantity * price
+                        if (data.varian) {
+                            if (
+                                item.product_id === data.id && 
+                                item.proddetail_id === data.varian.id
+                            ) {
+                                quantity = item.quantity + 1
+                                price = item.price
+                                subtotal = quantity * price
+                            }
+                        } else {
+                            if (
+                                item.product_id === data.id && 
+                                item.proddetail_id === null
+                            ) {
+                                quantity = item.quantity + 1
+                                price = item.price
+                                subtotal = quantity * price
+                            }
                         }
                         return {
                             ...item,
@@ -212,6 +248,7 @@ export default {
                     order_id: `ODR-${time}`,
                     shop_id: data.shop.id,
                     shop_name: data.shop.name,
+                    cashier_name: data.user.name,
                     total_item: data.total_item,
                     total_price: data.total_price,
                     status: 'on-progress'
@@ -280,6 +317,30 @@ export default {
                         commit('SET_MESSAGE_DATA', data.message)
                     } else {
                         commit('SET_MESSAGE_DATA', data.message)
+                    }
+                    return res
+                })
+                .catch((e) => {
+                    console.log('error', e)
+                })
+                .finally(() => {
+                    commit('SET_LOADING', false)
+                })
+        },
+        getById ({ commit, state }, data) {
+            commit('SET_LOADING', true)
+
+            const params = {
+                order_id: data.order_id
+            }
+
+            return axios.post('/api/order/getByID', params, { 
+                    headers: { Authorization: data.token } 
+                })
+                .then((res) => {
+                    if (res.data.status === 'ok') {
+                        const payload = res.data.data 
+                        commit('SET_DATA', payload)
                     }
                     return res
                 })

@@ -4,11 +4,11 @@
             <div class="display-flex space-between align-center padding padding-bottom-15px margin margin-bottom-20px border-bottom">
                 <div class="display-flex align-center">
                     <div class="width width-30px">
-                        <i class="fa fa-1x fa-th-large fonts orange"></i>
+                        <i class="fa fa-1x fa-th-large fonts main-color"></i>
                     </div>
                     <div>
                         <div class="fonts fonts-10 semibold">{{ dt.table_id }}</div>
-                        <div class="fonts fonts-10 grey">{{ dt.created_at | moment("from", "now") }}</div>
+                        <div class="fonts fonts-10 grey">{{ dt.created_at | moment("DD MMMM YYYY") }}</div>
                     </div>
                 </div>
                 <div class="display-flex flex-end align-center">
@@ -29,6 +29,7 @@
                                 <i class="icn icn-left fa fa-lw fa-align-left"></i> Detail 
                             </button>
                             <button 
+                                v-if="isRoleOwner"
                                 class="btn btn-white btn-full btn-align-left"
                                 @click="onDelete(dt)">
                                 <i class="icn icn-left fa fa-lw fa-trash-alt"></i> Delete
@@ -45,7 +46,7 @@
 
             <div class="display-flex space-between">
                 <div class="width width-80px margin marign-right-15px">
-                    <div class="image image-padding">
+                    <div class="image image-padding border-full">
                         <img 
                             v-if="dt.image" 
                             :src="tableImageThumbnailUrl + dt.image" 
@@ -56,7 +57,7 @@
                             class="btn btn-sekunder btn-small-icon btn-circle" 
                             style="position: absolute; bottom: 5px; right: 5px;" 
                             @click="onChangeCover(dt)">
-                            <i class="post-center fonts fonts-11 grey fa fa-lg fa-camera" />
+                            <i class="post-middle-absolute fonts fonts-11 grey fa fa-lg fa-camera" />
                         </button>
                     </div>
                 </div>
@@ -69,7 +70,7 @@
                     </div>
                     <div class="display-flex space-between padding padding-top-15px">
                         <div class="fonts micro black">
-                            Change table status to {{ dt.status === 'active' ? 'Inactive' : 'Active' }} ?
+                            Change status to {{ dt.status === 'active' ? 'Inactive' : 'Active' }} ?
                         </div>
                         <el-switch 
                             v-model="dt.status"
@@ -95,6 +96,16 @@ export default {
         AppCardCapsule,
         AppCardCaption,
     },
+    computed: {
+        isRoleOwner () {
+            let status = false 
+            const user = this.$cookies.get('user')
+            if (user.role_name === 'owner') {
+                status = true
+            }
+            return status
+        },
+    },
     methods: {
         // COVER
         onChangeCover (data) {
@@ -119,6 +130,11 @@ export default {
         // STATUS
         onChangeStatus (data) {
             this.$emit('onChangeStatus', data)
+        },
+
+        // QR CODE
+        onQrCode (data) {
+            this.$emit('onQrCode', data)
         }
     }
 }

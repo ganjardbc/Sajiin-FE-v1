@@ -10,7 +10,7 @@
             <i class="fa fa-lg fa-minus-circle"></i>
         </button>
         <input 
-            type="text" 
+            type="number" 
             placeholder=""
             style="width: calc(100% - 80px); border-radius: 0; text-align: center;" 
             class="field field-white" 

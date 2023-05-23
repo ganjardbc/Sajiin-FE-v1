@@ -17,11 +17,13 @@
             </el-table-column>
             <el-table-column
                 prop="value"
-                label="Value">
+                label="Value"
+                min-width="180">
             </el-table-column>
             <el-table-column
                 prop="type"
-                label="Type">
+                label="Type"
+                min-width="180">
             </el-table-column>
             <el-table-column width="60">
                 <template slot-scope="scope">

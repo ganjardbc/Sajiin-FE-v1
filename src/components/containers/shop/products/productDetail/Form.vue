@@ -34,7 +34,8 @@
                     </div>
                 </div>
                 <div class="field-group">
-                    <div class="field-label">Price (Rp)</div>
+                    <div class="field-label">Price</div>
+                    <div class="field-caption">This price will shown like this ({{ format(form.price) }})</div>
                     <el-input 
                         placeholder=""
                         type="number"
@@ -67,7 +68,7 @@
                 <div class="field-group">
                     <div class="field-label">Status</div>
                     <div class="display-flex space-between">
-                        <div class="fonts micro black">Is this varian still active ?</div>
+                        <div class="fonts micro black">Is this varian {{ form.status === 'active' ? 'Inactive' : 'Active' }} ?</div>
                         <el-switch 
                             v-model="form.status"
                             :disabled="isDetailForm"
@@ -142,7 +143,15 @@ export default {
         },
         getCover () {
             return this.form.image ? this.shopImageThumbnailUrl + this.form.image : ''
-        }
+        },
+        // priceCurrency: {
+        //     get: function() {
+        //         return this.form.price
+        //     },
+        //     set: function(newValue) {
+        //         this.form.price = this.currency(newValue)
+        //     }
+        // }
     },
     components: {
         AppSideForm,

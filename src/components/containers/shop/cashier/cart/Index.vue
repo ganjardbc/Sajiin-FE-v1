@@ -6,35 +6,46 @@
             :onClose="onClose">
             <div slot="toolbar">
                 <button 
-                    class="btn btn-small btn-main-reverse with-border with-hover margin margin-right-10px"
+                    class="btn btn-main-reverse with-border with-hover margin margin-right-10px"
                     :disabled="!isThereDetails"
                     @click="deleteAllProduct">
                     Clear Carts
                 </button>
             </div>
             <div class="right-form-body">
-                <div class="width width-100">
+                <div class="width width-100 padding padding-bottom-15px">
                     <AppEmpty v-if="!isThereDetails" />
                     <CardProduct :data.sync="details" />
+
+                    <div class="padding padding-bottom-15px margin margin-bottom-30px border-bottom"></div>
+
+                    <div class="card box-shadow bg-white">
+                        <div class="field-group">
+                            <div class="field-label">Name</div>
+                            <el-input 
+                                placeholder="Customer Name"
+                                type="text"
+                                :disabled="!isThereDetails"
+                                v-model="form.customer_name"></el-input>
+                        </div>
+
+                        <div v-if="isThereDetails" class="field-group">
+                            <div class="field-label">Table</div>
+                            <Table class="margin margin-top-15px" />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div slot="footer">
                 <div class="right-form-footer">
                     <div class="card bg-white box-shadow margin margin-bottom-20px">
-                        <AppCardCollapse :title="`Customer ${form.customer_name ? ' : ' + form.customer_name : ''}`">
-                            <div class="field-group">
-                                <el-input 
-                                    placeholder="Customer name"
-                                    type="text"
-                                    :disabled="!isThereDetails"
-                                    v-model="form.customer_name"></el-input>
-                                <Table v-if="isThereDetails" class="margin margin-top-15px" />
-                            </div>
-                        </AppCardCollapse>
-                        <div class="padding padding-bottom-15px margin margin-bottom-15px border-bottom"></div>
                         <div class="display-flex space-between">
                             <div class="fonts fonts-10 semibold black">Total ({{ orderQuantity }} products)</div>
-                            <div class="fonts fonts-10 semibold orange">{{ format(orderPrice) }}</div>
+                            <div class="fonts fonts-10 semibold main-color">{{ format(orderPrice) }}</div>
+                        </div>
+                        <div v-if="isThereDiscount" class="display-flex space-between">
+                            <div class="fonts fonts-10 normal black">Discount</div>
+                            <div class="fonts fonts-10 normal black align-right">{{ format(totalDiscount) }}</div>
                         </div>
                     </div>
 
@@ -59,11 +70,11 @@
     </div>
 </template>
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import AppEmpty from '../../../../modules/AppEmpty'
 import AppSideForm from '../../../../modules/AppSideForm'
 import AppCardCollapse from '../../../../modules/AppCardCollapse'
-import Table from '../table'
+import Table from '../table/Index'
 import CardProduct from './CardProduct'
 
 export default {
@@ -76,13 +87,11 @@ export default {
         CardProduct
     },
     computed: {
-        ...mapGetters({
-            getShopData: 'storeSelectedShop/getSelectedData'
-        }),
         ...mapState({
             form: (state) => state.storeCashier.form.order,
             errorMessage: (state) => state.storeCashier.errorMessage,
-            details: (state) => state.storeCashier.form.details 
+            details: (state) => state.storeCashier.form.details,
+            dataCurrent: (state) => state.storeCashBook.dataCurrent,
         }),
         orderQuantity () {
             let quantity = 0
@@ -99,6 +108,30 @@ export default {
             })
             return price
         },
+        orderPriceBeforeDiscount () {
+            let price = 0
+            this.details && this.details.map((item) => {
+                let quantity = item.quantity
+                if (item.is_discount) {
+                    price += quantity * item.second_price
+                } else {
+                    price += quantity * item.price
+                }
+            })
+            return price
+        },
+        totalDiscount () {
+            return this.orderPriceBeforeDiscount - this.orderPrice
+        },
+        isThereDiscount () {
+            let status = false
+            this.details && this.details.map((item) => {
+                if (item.is_discount) {
+                    status = true 
+                }
+            })
+            return status
+        },
         isThereDetails () {
             return this.details.length > 0
         },
@@ -112,6 +145,12 @@ export default {
             }
             return status
         },
+        getShopData () {
+            return this.dataCurrent && this.dataCurrent.shop
+        },
+        getUserData () {
+            return this.$cookies.get('user')
+        },
     },
     methods: {
         ...mapActions({
@@ -120,6 +159,7 @@ export default {
         }),
         onCreateOrder () {
             const payload = {
+                user: this.getUserData,
                 shop: this.getShopData,
                 total_item: this.orderQuantity,
                 total_price: this.orderPrice
@@ -129,6 +169,7 @@ export default {
         },
         onCheckOut () {
             const payload = {
+                user: this.getUserData,
                 shop: this.getShopData,
                 total_item: this.orderQuantity,
                 total_price: this.orderPrice
