@@ -55,13 +55,10 @@ export default {
     name: 'AppListMenu',
     data () {
         return {
-            permissions: [],
             sidebar: [],
         }
     },
-    mounted() {
-        this.permissions = this.$cookies.get('permissions')
-    },
+    mounted() {},
     methods: {
         onClick () {
             this.$emit('onClick')
@@ -78,18 +75,22 @@ export default {
             })
             return menu
         },
-        onCheckPermission (prm) {
+        onCheckPermission (value) {
             let stt = false
-            const data = this.permissions
-            data && data.length > 0 && data.map((dt) => {
-                if (dt.permission_name === prm) {
+            const data = JSON.parse(this.permissions)
+            if (data && data.length > 0) {
+                const isTherePermission = data.find((item) => item.permission_name === value)
+                if (isTherePermission) {
                     stt = true
                 }
-            })
+            }
             return stt
         },
     },
     computed: {
+        permissions() {
+            return this.$cookies.get('permissions')
+        },
         dataSideBar() {
             let menu = []
             this.data && this.data.map((dt) => {

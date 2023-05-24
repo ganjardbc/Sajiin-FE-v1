@@ -238,6 +238,14 @@ export default {
             loading: (state) => state.storeProfile.loading,
             loadingForm: (state) => state.storeProfile.loadingForm,
         }),
+        loadingForm: {
+            set(value) {
+                this.$store.state.storeProfile.loadingForm = value 
+            },
+            get() {
+                return this.$store.state.storeProfile.loadingForm
+            }
+        },
         getImage () {
             return this.form.image ? this.adminImageThumbnailUrl + this.form.image : ''
         }
