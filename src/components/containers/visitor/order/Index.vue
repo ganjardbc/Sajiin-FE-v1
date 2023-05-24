@@ -217,7 +217,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import logo from '@/assets/img/Logo.png'
+import logo from '@/assets/img/logo.png'
 import AppMobileLayout from '../../../modules/AppMobileLayout'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
 import AppPopupAlert from '../../../modules/AppPopupAlert'

@@ -25,7 +25,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import logo from '@/assets/img/Logo.png'
+import logo from '@/assets/img/logo.png'
 import AppLoader from '../../modules/AppLoader'
 import InactiveShop from './InactiveShop'
 

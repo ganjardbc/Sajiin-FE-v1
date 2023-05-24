@@ -81,7 +81,7 @@
 import { Printd } from 'printd'
 import VueQrcode from 'vue-qrcode'
 import AppCardPopup from './AppCardPopup'
-import logo from '@/assets/img/Logo.png'
+import logo from '@/assets/img/logo.png'
 
 export default {
     name: 'App',

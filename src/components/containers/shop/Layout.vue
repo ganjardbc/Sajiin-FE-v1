@@ -70,7 +70,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import VueLoadImage from 'vue-load-image'
-import logo from '@/assets/img/Logo.png'
+import logo from '@/assets/img/logo.png'
 import icon from '@/assets/img/icon.png'
 import AppListMenu from '../../modules/AppListMenu'
 import AppToast from '../../modules/AppToast'

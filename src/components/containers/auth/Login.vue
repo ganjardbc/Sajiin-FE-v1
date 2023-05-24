@@ -77,7 +77,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import logo from '@/assets/img/Logo.png'
+import logo from '@/assets/img/logo.png'
 
 export default {
     name: "Login",

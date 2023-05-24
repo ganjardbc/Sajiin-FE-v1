@@ -100,7 +100,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import logo from '@/assets/img/Logo.png'
+import logo from '@/assets/img/logo.png'
 import BottomCart from '../cart/BottomCart'
 import ProductList from '../product/Index'
 import AppPopupConfirmed from '../../../modules/AppPopupConfirmed'
