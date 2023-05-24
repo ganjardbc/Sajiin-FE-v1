@@ -48,29 +48,29 @@ export default {
             })
         }
 
-        // const data = this.$cookies.get('user');
-        // const token = this.$cookies.get('token');
-        // if (data && token) {
-        //     const payload = {
-        //         id: data.id,
-        //         name: data.name,
-        //         email: data.email,
-        //         token: token
-        //     }
-        //     this.$socket.emit('admin', payload)
-        // }
+        const data = this.$cookies.get('user');
+        const token = this.$cookies.get('token');
+        if (data && token) {
+            const payload = {
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                token: token
+            }
+            this.$socket.emit('admin', payload)
+        }
     },
-    // sockets: {
-    //     connect: function () {
-    //         this.$message('Your are connected')
-    //     },
-    //     disconnect: function () {
-    //         this.$message({
-    //             message: 'Your are disconnected',
-    //             type: 'error'
-    //         })
-    //     },
-    // }
+    sockets: {
+        connect: function () {
+            this.$message('Your are connected')
+        },
+        disconnect: function () {
+            this.$message({
+                message: 'Your are disconnected',
+                type: 'error'
+            })
+        },
+    }
 }
 </script>
 <style>
