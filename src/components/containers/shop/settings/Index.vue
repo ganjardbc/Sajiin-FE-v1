@@ -248,7 +248,7 @@
                                 </div>
                             </div>
                             <div v-if="form.is_digital_menu_active" class="field-group">
-                                <AppShopLink :link="`${initUrl}/visitor/${form.shop_id}`" />
+                                <AppShopLink :link="`${initUrl}visitor/${form.shop_id}`" />
                             </div>
                         </div>
                     </div>

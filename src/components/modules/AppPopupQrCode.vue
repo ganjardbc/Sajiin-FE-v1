@@ -34,7 +34,7 @@
                                     border-color: #FB3640;
                                     border-radius: 0;
                                 ">
-                                <VueQrcode :value="`${initUrl}/visitor/${data.shop_id}`" />
+                                <VueQrcode :value="`${initUrl}visitor/${data.shop_id}`" />
                             </div>
                         </div>
                         <div class="padding padding-15px">

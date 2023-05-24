@@ -102,7 +102,7 @@
 
             <AppPopupQrCode 
                 v-if="visibleQrCode"
-                :code="`${initUrl}/visitor/${paramShopId}/${form.table_id}`"
+                :code="`${initUrl}visitor/${paramShopId}/${form.table_id}`"
                 @onClose="onCloseQrCode"
             />
 

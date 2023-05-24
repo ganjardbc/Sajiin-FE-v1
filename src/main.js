@@ -30,13 +30,10 @@ import Vue from 'vue'
 import wb from './registerServiceWorker'
 import VueCurrencyInput from 'vue-currency-input'
 
-const url = window.location.protocol+'//'+window.location.host
-const socket = "http://174.138.18.90:8082"
-// const socket = "http://localhost:8082/"
-const printer = "http://localhost:9999"
-// const api = "http://localhost:8000"
-const api = "https://internal.sajiin-app-v1.my.id/"
-const deploy = "https://github.com/ganjardbc/Sajiin-FE-v1/"
+const initUrl = process.env.BASE_URL
+const socket = process.env.SOCKET_URL
+const printer = process.env.PRINTER_URL
+const api = process.env.API_URL
 const pluginOptions = {
     globalOptions: { 
         currency: 'IDR',
@@ -81,9 +78,8 @@ Vue.prototype.$workbox = wb
 Vue.prototype.format = (data) => { return formatCurrency(data) }
 Vue.prototype.currency = (data) => { return fieldCurrency(data) }
 Vue.prototype.cashBookList = (data) => { return getCashbookList(data) }
-Vue.prototype.deployUrl = deploy
 Vue.prototype.apiUrl = api
-Vue.prototype.initUrl = url
+Vue.prototype.initUrl = initUrl
 Vue.prototype.socketUrl = socket
 Vue.prototype.printerUrl = printer
 Vue.prototype.adminImageThumbnailUrl = api + '/contents/users/thumbnails/'

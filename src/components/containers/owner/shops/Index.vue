@@ -433,7 +433,6 @@ export default {
         onManage (data) {
             this.$store.state.storeSelectedShop.selectedData = data.id
             this.$router.push({ name: 'shop-home', params: { shopId: data.shop_id } })
-            // window.location = `/shop/${data.shop_id}/home`
         },
 
         // STATUS

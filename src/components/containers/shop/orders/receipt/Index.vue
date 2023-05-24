@@ -156,7 +156,7 @@
                         <div class="margin margin-top-10px">
                             <div class="fonts fonts-8 normal align-center">Scan to Check this Order</div>
                             <div class="width width-150px width-center">
-                                <VueQrcode :value="`${initUrl}/visitor/${form.shop && form.shop.shop_id}/order/${form.order_id}`" errorCorrectionLevel="L" :width="150" />
+                                <VueQrcode :value="`${initUrl}visitor/${form.shop && form.shop.shop_id}/order/${form.order_id}`" errorCorrectionLevel="L" :width="150" />
                             </div>
                         </div>
                     </div>
